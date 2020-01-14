@@ -1,0 +1,116 @@
+.second_page{
+	min-height: 100%;
+}
+.pro_box{
+	background: #EFF2F7;
+	padding-bottom: 8px;
+}
+.pro_box > .pro_item{
+	flex: 1;
+	height: 126px;
+	background: #FFFFFF;
+	border-radius: 4px;
+	margin: 0 10px;
+	overflow: hidden;
+}
+.pro_box > .pro_item:first-child{
+    margin: 0;
+}
+.pro_box > .pro_item:last-child {
+    margin: 0;
+}
+.item_part{
+	padding: 0 25px;
+	height: 90px;
+}
+.item_part .medium_title{
+	padding-left: 40px;
+	position: relative;
+}
+.item_part .medium_title::before{
+	content: " ";
+	display: block;
+	width: 32px;
+	height: 32px;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	background-image:url(../../../image/maibo.png);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+}
+.pro_item .num_xlarge{
+	height: 28px;
+	line-height: 28px;
+	overflow: hidden;
+}
+.authorize_btn{
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	background: #DEE5FF;
+}
+.authorize_btn:hover{
+	/* opacity: 0.8; */
+	background: #DEE2FF;
+	font-weight: bold;
+}
+.pro_item.empty_pro{
+	border: 1px dashed #DADADA;
+	text-align: center;
+}
+.empty_pro .anticon-plus{
+	font-size: 42px;
+	color: #D8D8D8;
+}
+.empty_pro .mini_title{
+	color: #777777;
+	margin-top: 10px;
+}
+.empty_pro:hover{
+	background: #FAFAFA;
+}
+.empty_pro:hover .anticon-plus{
+	color: #BBBBBB;
+}
+.empty_pro:hover .mini_title{
+	color: #555555;
+}
+.search_box{
+	padding: 8px 15px;
+	position: relative;
+}
+.search_item{
+	padding: 6px 10px;
+}
+.search_item > span:first-child{
+	width: 98px;
+	text-align: right;
+}
+.search_item > span:last-child{
+	flex-grow: 1;
+	padding-left: 15px;
+}
+.search_btn_group{
+	justify-content: flex-end;
+	padding: 5px 10px;
+}
+.search_btn_group.open_search_box{
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.search_btn_group .icon_up_down{
+	opacity: 0.9;
+}
+.search_btn_group .icon_up_down:hover{
+	font-weight: bold;
+	opacity: 1;
+}
+.search_btn_group > button{
+	margin-left: 8px;
+}
+

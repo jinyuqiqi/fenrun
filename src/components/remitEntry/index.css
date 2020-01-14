@@ -1,0 +1,53 @@
+.box_remit .list_item{
+	border-bottom: 1px solid #e8e8e8;
+	padding-bottom: 5px;
+}
+.box_remit .item{
+	color: #333333;
+	padding: 10px 0;
+	font-weight:400;
+}
+.box_remit .item:first-child{
+	padding-top: 0;
+}
+.box_remit .item span:first-child{
+	width: 40%;
+	text-align: right;
+}
+.box_remit .item span:last-child{
+	width: 55%;
+	padding-left: 20px;
+}
+.box_remit .remit_form{
+	padding: 20px 0 10px;
+	color: #333333;
+}
+.box_remit .remit_form .remit_form_item{
+	width: 48%;
+}
+.box_remit .remit_form .remit_form_tle{
+	padding-bottom: 8px;
+}
+.box_remit .ant-input-number-handler-wrap{
+	display: none;
+}
+.box_remit .ant-input-number{
+	width: 100%;
+}
+.box_remit .remit_form_item input{
+	font-weight: bold;
+	color: #333333;
+}
+.box_remit .remit_form_item input::-webkit-input-placeholder {
+    font-weight: normal;
+	color: #999999;
+}
+.input_money{
+	position: relative;
+}
+.input_money .unit{
+	position: absolute;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+}

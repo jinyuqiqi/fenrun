@@ -1,0 +1,68 @@
+.audit_inner{
+	padding: 0 18px 10px;
+}
+.audit_inner_module{
+	padding-top: 15px;
+}
+.audit_inner_module_name{
+	padding-bottom: 8px;
+}
+.audit_inner_module_content{
+	padding: 0 15px;
+}
+.audit_info_item{
+	width: 100%;
+	padding: 10px 0;
+}
+.audit_module_pay .audit_info_item{ 
+	padding: 8px 0;
+}
+.audit_inner .ant-table-thead > tr > th{
+	font-weight: bold;
+	padding: 12px 16px;
+}
+.audit_inner .ant-table-tbody > tr > td{
+	padding: 12px 16px;
+}
+.img_inline span{
+	position: relative;
+}
+.img_inline span a{
+	position: absolute;
+	right: 15px;
+	bottom: 5px;
+	color: #999988;
+}
+.img_inline span i:hover{
+	color: #333333;
+	cursor: pointer;
+}
+.img_inline img{
+	width: 92px;
+	height: 92px;
+	display: block;
+	margin-right: 10px;
+	border-radius: 3px;
+}
+.ant-steps-dot .ant-steps-item-content, 
+.ant-steps-dot.ant-steps-small .ant-steps-item-content{
+	width: 360px;
+	display: flex;
+}
+.ant-steps-dot .ant-steps-item-content > div, 
+.ant-steps-dot.ant-steps-small .ant-steps-item-content > div{
+	height: 24px;
+	line-height: 24px;
+	padding: 0;
+}
+.ant-steps-item-description{
+	color: #2F54EB;
+	cursor: pointer;
+	margin-left: 15px;
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description{
+	color: #2F54EB;
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description:hover{
+	font-weight: bold;
+}

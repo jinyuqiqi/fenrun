@@ -1,0 +1,72 @@
+.bank_card_box{
+	height: auto;
+	background: #FFFFFF;
+}
+.bank_card_box::after{
+	content: " ";
+	width: 100%;
+	height: 0;
+	padding-bottom: 15px;
+	display: block;
+}
+.inner_top_title{
+	height: 44px;
+	line-height: 44px;
+	border-bottom: 1px solid rgba(242,242,242,1);
+	padding: 0 18px;
+}
+.bank_card_form{
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+.bank_card_form_item{
+	width: 90%;
+	padding: 8px 0;
+}
+.bank_card_form_item > span:first-child{
+	width: 40%;
+	text-align: right;
+}
+.bank_card_form_item > span:last-child{
+	width: 55%;
+	padding-left: 20px;
+}
+.bank_card_form_item .ant-radio-group .ant-radio-wrapper:last-child{
+	margin-left: 50px;
+}
+.ant-upload .ant-upload-text{
+	color:rgba(0,0,0,0.65);
+	font-size: 13px;
+}
+.ant-upload .anticon-plus{
+	color: #777777;
+	font-size: 28px;
+}
+.upload_outter_box {
+	position: relative;
+}
+.upload_outter_box::after{
+	content: " ";
+	width: 100%;
+	height: 12px;
+	display: block;
+	margin: 0;
+}
+.upload_outter_box .upload_notice{
+	position: absolute;
+	bottom: 5px;
+	color: #777777;
+	font-size: 13px;
+}
+.input_outter_box{
+	position: relative;
+}
+.input_outter_box .input_notice{
+	color: #777777;
+	font-size: 13px;
+	position: absolute;
+	bottom: -20px;
+}
+.submit_btns button{
+	margin-right: 10px;
+}

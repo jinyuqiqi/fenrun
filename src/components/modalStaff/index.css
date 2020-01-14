@@ -1,0 +1,20 @@
+.modal_content{
+	padding: 0 12px;
+}
+.item_box{
+	padding-bottom: 15px;
+}
+.item_box .item_txt{
+	line-height: 34px;
+}
+.item_box .item_txt .dangerous_color{
+	font-size: 13px;
+}
+.item_box > div{
+	width: 100%;
+}
+.text_wrap p{
+	margin: 0;
+	font-size: 13px;
+	color: #000000;
+}

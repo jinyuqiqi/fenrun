@@ -1,0 +1,80 @@
+.inner_top_title{
+	height: 44px;
+	line-height: 44px;
+	border-bottom: 1px solid rgba(242,242,242,1);
+	padding: 0 18px;
+}
+.inner_top_title_btns button{
+	margin-left: 10px;
+}
+.inner_top_input{
+	height: 64px;
+	line-height: 64px;
+	margin: 0 25px;
+	padding: 5px 0 0;
+	position: relative;
+} 
+.inner_top_input .top_btn{
+	margin-right: 10px;
+}
+.inner_top_input .input_outer{
+	width: 260px;
+}
+.role_module_title{
+	position: relative;
+}
+.error_text{
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	font-size: 13px;
+}
+.role_box{
+	padding: 0 25px 30px;
+}
+.role_box .role_item{
+	padding: 12px 0 8px;
+}
+.role_box .ant-checkbox-group .ant-checkbox-group-item{
+	margin-right: 25px;
+}
+.role_box .ant-checkbox-group .ant-checkbox-group-item:last-child{
+	margin-right: 0;
+}
+.role_box .ant-checkbox-group .ant-checkbox-group-item:first-child{
+	margin-left: 8px;
+}
+.button_groups{
+	padding: 0 25px 30px;
+	margin-top: 80px;
+}
+.button_groups button{
+	margin-right: 12px;
+}
+.checkBoxTable{
+	border: 1px solid #D8D8D8;
+}
+.self_table{
+	border: 1px solid #D8D8D8;
+	line-height: 40px;
+	margin-top: 8px;
+	background: #F8F9FC; 
+	border-bottom: none;
+}
+.self_table .self_table_cell .self_table_tr{
+	border-right: 1px solid #D8D8D8;
+	flex-shrink: 0;
+	width: 180px;
+	padding: 0 20px;
+}
+.self_table .self_table_cell .self_table_td{
+	padding: 0 20px;
+	flex-grow: 1;
+}
+.self_table .self_table_cell{
+	border-bottom: 1px solid #D8D8D8;
+}
+.self_table .self_table_cell:last-child{
+	/* border-bottom: none; */
+}

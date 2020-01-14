@@ -1,0 +1,34 @@
+.bread_wrap{
+	/* width: 100%; */
+	height: 36px;
+	line-height: 36px;
+	overflow: hidden;
+	position: fixed;
+	top: 60px;
+	left: 0;
+	z-index: 301;
+	background: #EFF2F7;
+	/* box-shadow: 0 0 5px #888; */
+	width: calc(100% - 15px);
+	width: -moz-calc(100% - 15px);
+	width: -webkit-calc(100% - 15px);
+}
+.bread_wrap .ant-breadcrumb{
+	height: 36px;
+	line-height: 36px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 5;
+	background: #EFF2F7;
+	padding: 0 10px;
+}
+.bread_wrap.bread_right .ant-breadcrumb{
+	left: 150px;
+}
+.bread_wrap .ant-breadcrumb-link{
+	color: #333333;
+}
+.bread_wrap .ant-breadcrumb-link a{
+	color: #666666;
+}

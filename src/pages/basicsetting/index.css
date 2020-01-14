@@ -1,0 +1,7 @@
+.container_parent{
+	height: 100%;
+	overflow: hidden;
+}
+.right_content .container_wrap{
+	padding-right: 10px;
+}

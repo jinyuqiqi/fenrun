@@ -1,0 +1,32 @@
+/* .ant-modal{
+	top: 50% !important;
+	transform: translateY(-50%) !important;
+} */
+
+
+
+
+.modal_content{
+	padding: 0 12px;
+}
+.item_box{
+	padding-bottom: 15px;
+}
+.item_box.half_item_box > div{
+	width: 48%;
+}
+.item_box .item_txt{
+	line-height: 34px;
+}
+.item_box > div{
+	width: 100%;
+}
+.text_wrap p{
+	margin: 0;
+	font-size: 13px;
+	color: #000000;
+}
+.ant-radio-group .ant-radio-wrapper:last-child{
+	margin-left: 30px;
+}
+

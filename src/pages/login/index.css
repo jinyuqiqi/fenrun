@@ -1,0 +1,59 @@
+.login_wrap{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: #ECF0FD;
+	background-image:url(../../image/login_back.png);
+	background-repeat:no-repeat;
+	background-size: 55.4% auto;
+	-moz-background-size: 55.4% auto;
+	background-position:1px 140px;
+}
+.login_form{
+	position: absolute;
+	width: 460px;
+	right: 160px;
+	top: 160px;
+	text-align: right;
+}
+.project_name > div{
+	color: #2F54EB;
+}
+.project_name .large_title{
+	font-size: 36px;
+}
+.project_name .default_title{
+	font-weight: normal;
+	font-size: 18px;
+}
+.form_items{
+	width: 320px;
+	position: absolute;
+	top: 140px;
+	right: 0;
+}
+.form_items .item_name{
+	padding: 5px 0;
+}	
+.form_items .ant-input{
+	border-radius: 1px;
+	margin-bottom: 10px;
+}
+.form_items .ant-input:focus{
+	border-color: #2F54EB !important;
+}
+.form_items .dangerous_color{
+	font-size: 13px;
+}
+.form_items .password_set{
+	margin: 20px 0;
+}
+.form_items .ant-btn.ant-btn-block{
+	width: 100%;
+	border-radius: 2px;
+	height: 34px;
+}
+.ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix{
+	top: 40%;
+}
+

@@ -1,0 +1,28 @@
+.audit_info .info_item{
+	padding: 2px 15px;
+	border-bottom: 1px solid #e8e8e8;
+}
+.audit_info .info_item:last-child{
+	border-bottom: none;
+}
+.audit_info .info_item:first-child{
+	padding-top: 0;
+}
+.with_padding{
+	padding: 3px 0;
+}
+.a_btn{
+	padding: 2px 5px;
+	color: #2F54EB;
+	border: 1px solid #2F54EB;
+	display: block;
+	border-radius: 2px;
+	opacity: 0.8;
+}
+.a_btn .anticon{
+	color: #2F54EB;
+}
+.a_btn:hover{
+	opacity: 1;
+	color: #2F54EB;
+}

@@ -1,10 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
+
+// import { persistor } from './store'
+// import { PersistGate } from 'redux-persist/lib/integration/react';
+
+import { ConfigProvider } from 'antd';
 import App from './App';
+import 'antd/dist/antd.css';
+import zhCN from 'antd/es/locale/zh_CN';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+	<Provider store={store}>
+		{/*<PersistGate loading={null} persistor={persistor}>*/}
+			<BrowserRouter>
+				<ConfigProvider locale={zhCN}>
+					<App />
+				</ConfigProvider>
+			</BrowserRouter>
+		{/*</PersistGate>*/}
+	</Provider>,
+	document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

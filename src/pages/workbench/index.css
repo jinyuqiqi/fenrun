@@ -1,0 +1,224 @@
+.row_module{
+	padding: 0 5px;
+}
+.row_inner{
+	border-radius: 3px;
+	height: 480px;
+	background: #FFFFFF;
+	padding: 25px 20px;
+}
+.row_inner.row_inner_column{
+	background: transparent;
+	padding: 0;
+}
+.customer{
+	position: relative;
+	padding-left: 66px;
+}
+.customer::before{
+	content: " ";
+	display: block;
+	width: 56px;
+	height: 56px;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -30px;
+	background-image:url(../../image/atavar.png);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+	/* background: url(../../image/atavar.png) no-repeat center 100%; */
+}
+.customer div:first-child{
+	height: 24px;
+	line-height: 24px;
+}
+.customer div:last-child{
+	margin-top: 3px;
+}
+.billling{
+	text-align: right;
+}
+.billling:hover{
+	color: #000000;
+	font-weight: bold;
+}
+.account_wrap{
+	width: 100%;
+	height: 340px;
+	margin: 30px auto 0;
+	background: #F6F7F8;
+	padding: 25px;
+	position: relative;
+	background-image:url(../../image/coins.png);
+	background-repeat:no-repeat;
+	background-position: bottom right;
+	background-size:240px 154px;
+	-moz-background-size:240px 154px;
+}
+.my_account{
+	position: absolute;
+	top: 25px;
+	
+}
+.account_log{
+	position: absolute;
+	bottom: 25px;
+	line-height: 32px;
+}
+.account_log .iconfont{
+	color: #81A8FF;
+}
+.account_log .line{
+	margin: 0 10px;
+	background: #8A8A8A;
+	height: 16px;
+	width: 1px;
+}
+.account_log .pointer:hover{
+	color: #000000;
+	font-weight: bold;
+}
+.row_inner_column h4{
+	margin: 0;
+	height: 64px;
+	line-height: 64px;
+}
+.product_box,.bank_card_box{
+	border-radius: 3px;
+	height: 325px;
+	background: #FFFFFF;
+	padding: 0 20px;
+}
+.product_wrap{
+	width: 48%;
+	height: 245px;
+	/* padding-bottom: 50%; */
+	background: #F6F7F8;
+	border-radius: 3px;
+}
+.product_wrap:hover{
+	opacity: 0.8;
+	background: #F1F1F1;
+}
+.product_wrap:first-child::before{
+	content: " ";
+	display: block;
+	width: 54px;
+	height: 49px;
+	background-image:url(../../image/maibo.png);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+	margin-bottom: 12px;
+}
+.product_wrap:nth-child(2)::before{
+	content: " ";
+	display: block;
+	width: 95px;
+	height: 49px;
+	background-image:url(../../image/Group.png);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+	margin-bottom: 12px;
+}
+.product_num,.bank_card_num{
+	height: 145px;
+	border-radius: 3px;
+	background: #FF8701;
+	padding: 0 20px;
+	
+}
+.product_num{
+	background:linear-gradient(239deg,rgba(255,135,1,1) 0%,rgba(255,105,24,1) 100%);
+}
+.product_num:hover{
+	opacity: 0.8;
+	background: rgba(255,105,24,1);
+}
+.pro_detail, .bank_detail{
+	height: 100%;
+	
+	background-repeat:no-repeat;
+	background-position: bottom right;
+	background-size:206px 135px;
+	-moz-background-size:206px 135px;
+}
+.pro_detail{
+	background-image:url(../../image/product.png);
+}
+.bank_detail{
+	background-image:url(../../image/buildding.png);
+}
+.pro_detail div,
+.bank_detail div{
+	color: #FFFFFF;
+} 
+.bank_title{
+	height: 54px;
+	line-height: 54px;
+}
+.bank_title .pointer:hover{
+	font-weight: bold;
+	color: #555555;
+}
+.bank_card_wrap{
+	margin: 0 auto;
+	width: 80%;
+	max-width: 390px;
+	padding: 0 20px;
+	/* height: 220px; */
+	height: 255px;
+	background-image:url(../../image/bank_card.png);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+	border-radius: 4px;
+}
+.bank_card_wrap div{
+	color: #FFFFFF;
+	
+}
+.bank_card_wrap div:first-child{
+	margin-bottom: 8px;
+}
+.bank_card_num{
+	/* background: linear-gradient(to right, rgba(131,155,255,1), rgba(255,105,24,1)); */
+	background:linear-gradient(207deg,rgba(131,155,255,1) 0%,rgba(47,84,235,1) 100%);
+}
+.bank_card_num:hover{
+	opacity: 0.8;
+	background: rgba(47,84,235,1);
+}
+.bank_card_wrap:hover{
+	opacity: 0.8;
+}
+.empty_card{
+	border: 1px dashed #DADADA;
+	margin: 0 auto;
+	width: 80%;
+	max-width: 390px;
+	padding: 0 20px;
+	/* height: 220px; */
+	height: 255px;
+	border-radius: 6px;
+	text-align: center;
+}
+.empty_card .anticon-plus{
+	font-size: 64px;
+	color: #D8D8D8;
+}
+.empty_card .mini_title{
+	color: #777777;
+	margin-top: 10px;
+}
+.empty_card:hover .anticon-plus{
+	color: #BBBBBB;
+}
+.empty_card:hover .mini_title{
+	color: #555555;
+}
+
+
