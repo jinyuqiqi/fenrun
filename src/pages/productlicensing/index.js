@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+// import { Spin } from 'antd';
 import BreadCrumb from '@/components/breadcrumb';
 import LeftNavMenu from '@/components/leftNavMenu';
 import Loadable from '@/components/loadable';
@@ -8,7 +9,9 @@ import './index.css';
 const Customer = Loadable(()=> import('@/pages/productlicensing/customer'));
 const Authorizations = Loadable(()=> import('@/pages/productlicensing/authorizations'));
 const AuthorizationSteps = Loadable(()=> import('@/pages/productlicensing/authorizationsteps'));
+const AuthorizationStepsl = Loadable(()=> import('@/pages/productlicensing/authorizationstepsl'));
 const InAudit = Loadable(()=> import('@/pages/productlicensing/inaudit'));
+const CustomerInfo = Loadable(()=> import('@/pages/productlicensing/customerinfo'));
 const AuditSuccess = Loadable(()=> import('@/pages/productlicensing/auditsuccess'));
 
 export default class ProductLicensing extends Component{
@@ -29,8 +32,6 @@ export default class ProductLicensing extends Component{
 				}
 			]
 		}
-		
-		// console.log(props.location.pathname.substr())
     }
 	
 	componentWillMount(){
@@ -38,16 +39,12 @@ export default class ProductLicensing extends Component{
 	}
 	
 	componentWillReceiveProps(nextProps) {
-		console.log(this.props)
-		console.log(nextProps)
 	    if (nextProps.location.pathname !== this.props.location.pathname) {
 			this.listenRouteChange(nextProps.location.pathname)
-			
 	    } 
 	}
 
 	componentDidMount(){
-		console.log('mount')
 	}
 	
 	listenRouteChange(pathname){
@@ -66,9 +63,11 @@ export default class ProductLicensing extends Component{
 					<Switch>
 						<Route path='/index/productlicensing/authorizations' component={Authorizations} />
 						<Route path='/index/productlicensing/customer' component={Customer} />
+						<Route path='/index/productlicensing/customerinfo' component={CustomerInfo} />
 						<Route path='/index/productlicensing/inaudit' component={InAudit} />
 						<Route path='/index/productlicensing/auditsuccess' component={AuditSuccess} />
 						<Route path='/index/productlicensing/authorizationsteps' component={AuthorizationSteps} />
+						<Route path='/index/productlicensing/authorizationstepsl' component={AuthorizationStepsl} />
 						<Redirect to='/index/productlicensing/authorizations'  />
 					</Switch>
 				</div>

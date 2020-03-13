@@ -18,7 +18,7 @@ export default class ModalParking extends Component{
     render(){
         return(
             <Modal
-			  style={{top: '50%', transform: 'translateY(-50%)'}}
+			  centered
 			  title='添加车场运营商'
 			  visible={this.props.visible}
 			  onOk={this.props.hideModal}

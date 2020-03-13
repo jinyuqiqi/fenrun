@@ -1,142 +1,14 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, Icon, Input } from 'antd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateLoading } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import TableComponent from '@/components/tableComponent';
+import { getBusinessOrder, getBusinessAmount } from '@/http/api';
 import './index.css';
 
-const data = [
-  {
-    key: '1',
-    name: '桃田',
-    age: 32,
-    address: '纽约大姐34号',
-  },
-  {
-    key: '2',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '5',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '7',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '8',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '10',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '11',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '13',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '14',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '16',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '17',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '19',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
-
-const pagination = {
-	size: 'small',
-	showSizeChanger: true,
-	showQuickJumper: true,
-	total: 200,
-	defaultCurrent: 1,
-	showTotal: total => `共 ${total} 条`,
-	onShowSizeChange: onShowSizeChange
-	
-}
-
-function onShowSizeChange(current, pageSize) {
-  console.log(current, pageSize);
-}
-
-export default class BusinessBill extends Component{
+class BusinessBill extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -151,33 +23,85 @@ export default class BusinessBill extends Component{
 			],
 			columns: [
 			  {
-				title: '销售单号',
-				dataIndex: 'name',
+				title: '编号',
+				dataIndex: 'businessOrderSn',
 			  },
 			  {
-				title: '产品', 
-				dataIndex: 'age',
+				title: '订单编号',
+				dataIndex: 'parkingOrderSn'
 			  },
 			  {
-				title: '客户名称',
-				dataIndex: 'address',
+			  	title: '工程商',
+			  	dataIndex: 'contractorId'
 			  },
 			  {
-				title: '状态',
-				dataIndex: 'status',
-				render: (text, record) => (
-				    <span className="span_btn_group">
-				    	<span className="span_btn pointer">详情</span>
-				    </span>
-				)
+				title: '支付方式',
+				dataIndex: 'payTypeText',
+			  },
+			  {
+				title: '交易流水号', 
+				dataIndex: 'tradeNo',
+			  },
+			  {
+				title: '车场',
+				dataIndex: 'parkingName',
+			  },
+			  {
+				title: '车牌',
+				dataIndex: 'cardNo',
+			  },
+			  {
+				title: '进场时间',
+				dataIndex: 'parkingInTime',
+			  },
+			  {
+				title: '出场时间',
+				dataIndex: 'parkingOutTime',
+			  },
+			  {
+				title: '停车时长',
+				dataIndex: 'continueTime',
+			  },
+			  {
+				title: '订单金额',
+				dataIndex: 'amount',
+			  },
+			  {
+				title: '分润金额',
+				dataIndex: 'shareTotalAmount',
 			  },
 			],
+			tableList: [],
+			pagination: {
+				size: 'small',
+				showSizeChanger: true,
+				showQuickJumper: true,
+				total: 0,
+				pageSize: 10, 
+				current: 1,
+				showTotal: total => `共 ${total} 条`,
+				onChange: this.onPaginationChange,
+				onShowSizeChange: this.onPaginationChange
+			},
 			searchBoxFold: true,
+			amount: 0
 		}
-    }
-
-	componentDidMount(){
 		
+		this.fetchAllOrder(true)
+    }
+	
+	static propTypes = {
+		updateLoading: PropTypes.func,
+	}
+
+	componentWillMount(){
+		getBusinessAmount().then(res=> {
+			if(res.code===1){
+				this.setState({
+					amount: res.data
+				})
+			}
+		})
 	}
 	
 	hideModal = () => {
@@ -198,6 +122,57 @@ export default class BusinessBill extends Component{
 			searchBoxFold: bool
 		})
 	}
+	
+	onPaginationChange = (current, pageSize)=> {
+		let pagination = this.state.pagination
+		pagination.current = current
+		pagination.pageSize = pageSize
+		this.setState({
+			pagination: pagination
+		})
+		this.fetchAllOrder()
+	}
+	
+	fetchAllOrder = (init=false) => {
+		let loading = true
+		let params = {
+			pageNum: this.state.pagination.current,
+			pageSize: this.state.pagination.pageSize
+		}
+		
+		this.props.updateLoading(loading)
+		getBusinessOrder(params).then(res=> {
+			console.log(res)
+			if(res.code===1){
+				let { pagination } = this.state
+				let tableList = res.data.list.map((item, index)=> {
+					item["key"] = item.businessOrderId;
+					item['parkingInTime'] = item.parkingInTime?item.parkingInTime.replace(/T/g, " ").replace(/\.000\+0000/g, ""):'';
+					item['parkingOutTime'] = item.parkingOutTime?item.parkingOutTime.replace(/T/g, " ").replace(/\.000\+0000/g, ""):'';
+					item["payTypeText"] = item.payType===1?'支付宝':(item.payType===2?'微信':'其他');
+					item['amount'] = item.amount + '元';
+					item['shareAdvertAmount'] = item.shareAdvertAmount + '元'; 
+					return item
+				})
+				pagination.total = res.data.total
+				if(init){
+					this.state.tableList = tableList
+					this.state.pagination = pagination
+				}else{
+					this.setState({
+						tableList,
+						pagination
+					})
+				}
+				
+			}
+			loading = false
+			this.props.updateLoading(loading)
+		}).catch(err=> {
+			loading = false
+			this.props.updateLoading(loading)
+		})
+	}
 
     render(){
         return( 
@@ -211,14 +186,14 @@ export default class BusinessBill extends Component{
 							<div className="inner_outter">
 								<div className="inner_top_title flex_box flex_between">
 									<span className="default_title">总计</span>
-									<span className="default_title">25000元</span>
+									<span className="default_title">{this.state.amount}元</span>
 								</div>
 							</div>
 							
 							<TableComponent
 								columns={this.state.columns}
-								data={data} 
-								pagination={pagination}></TableComponent>
+								data={this.state.tableList} 
+								pagination={this.state.pagination}></TableComponent>
 						</div>
 					</div>
 				</div>
@@ -226,3 +201,8 @@ export default class BusinessBill extends Component{
         )
     }
 }
+
+export default connect(null,{
+		updateLoading
+	}
+)(BusinessBill);

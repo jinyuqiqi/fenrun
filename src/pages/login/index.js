@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
-import { login } from '@/http/api';
+import { Base64 } from 'js-base64';
+import { login, getUsetInfo } from '@/http/api';
 import { testSpace } from '@/utils/tool';
 import './index.css';
 const errorText = '请输入正确的用户名或密码'
@@ -12,6 +13,7 @@ export default class Login extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			disabled: false,
 			errorUser: false,
 			errorPass: false,
 			userName: '',
@@ -19,29 +21,51 @@ export default class Login extends Component{
 			tipUserName: '',
 			tipPassword: ''
 		}
+		window.sessionStorage.clear()
 	}
 
 	loginEvent = () => {
 		if(!this.verifyParams()) return
 		const { userName, password } = this.state
+		this.setState({
+			disabled: true
+		})
 		login({
 		  userName,
 		  password
 		}).then(res=> {
 			if(res.code===1){
-				window.sessionStorage.setItem('type', String(res.data.type))
-				window.sessionStorage.setItem('roleId', String(res.data.roleId))
+				let type = Base64.encode(String(res.data.type))
+				let roleId = Base64.encode(String(res.data.roleId))
+				window.sessionStorage.setItem('type', type)
+				window.sessionStorage.setItem('roleId', roleId)
 				window.sessionStorage.setItem('token', res.data.token)
-				this.props.history.replace({pathname: '/index'})
-			}
-			if(res.code===1006){
+				getUsetInfo().then(res=> {
+					if(res.code===1){
+						let userInfo = Base64.encode(JSON.stringify(res.data))
+						window.sessionStorage.setItem('userInfo', userInfo)
+						message.success('成功!')
+						this.props.history.replace({pathname: '/index'})
+					}
+				})
+				
+				
+			}else{
 				this.setState({
+					disabled: false,
 					errorUser: true,
 					errorPass: true,
 					tipUserName: errorText,
 					tipPassword: errorText
 				})
 			}
+			// if(res.code===1006){
+				
+			// }
+		}).catch(err=> {
+			this.setState({
+				disabled: false
+			})
 		})
 	}
 	
@@ -101,7 +125,7 @@ export default class Login extends Component{
 				<div className="login_form">
 					<div className="project_name">
 						<div className="default_title">BEGINEERING  BUSINESS  MANAGEMENT</div>
-						<div className="large_title">工程商管理</div>
+						<div className="large_title">工 程 商 管 理</div>
 					</div>
 					<div className="form_items">
 						<div>
@@ -145,7 +169,11 @@ export default class Login extends Component{
 							
 						</div>
 						<div>
-							<Button onClick={this.loginEvent} type="primary" block>登录</Button>
+							<Button 
+								disabled={this.state.disabled} 
+								onClick={this.loginEvent} 
+								type="primary" 
+								block>登录</Button>
 						</div>
 					</div>
 				</div>

@@ -8,7 +8,7 @@
 	padding-bottom: 8px;
 }
 .audit_inner_module_content{
-	padding: 0 15px;
+	/* padding: 0 15px; */
 }
 .audit_info_item{
 	width: 100%;
@@ -16,6 +16,11 @@
 }
 .audit_module_pay .audit_info_item{ 
 	padding: 8px 0;
+}
+.audit_info_item span.base_span{
+	width: 90px;
+	text-align: right;
+	padding-right: 8px;
 }
 .audit_inner .ant-table-thead > tr > th{
 	font-weight: bold;
@@ -46,7 +51,7 @@
 }
 .ant-steps-dot .ant-steps-item-content, 
 .ant-steps-dot.ant-steps-small .ant-steps-item-content{
-	width: 360px;
+	width: 95%;
 	display: flex;
 }
 .ant-steps-dot .ant-steps-item-content > div, 
@@ -56,13 +61,46 @@
 	padding: 0;
 }
 .ant-steps-item-description{
-	color: #2F54EB;
-	cursor: pointer;
+	
 	margin-left: 15px;
 }
-.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description{
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description .click_text{
 	color: #2F54EB;
+	cursor: pointer;
 }
-.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description:hover{
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-description .click_text:hover{
 	font-weight: bold;
 }
+.desc_group span.click_text{
+	margin: 0 10px 0 20px;
+}
+
+.desc_group span.tip_text{
+	color: #F7B500
+}
+.space_title{
+	padding-bottom: 40px;
+	position: relative;
+}
+.space_phone{
+	position: absolute;
+	left: 0;
+	bottom: 5px;
+}
+.ant-steps-item.success_step{
+	height: 70px;
+}
+.success_step .ant-steps-item-title{
+	position: relative;
+	overflow: visible;
+	padding-bottom: 55px !important;
+}
+.success_step .ant-steps-item-title .subtitle-phone{
+	position: absolute;
+	bottom: 5px;
+	left: 0;
+	width: 240px;
+	margin-left: 0;
+}
+
+

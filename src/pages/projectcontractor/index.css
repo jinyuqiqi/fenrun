@@ -13,8 +13,8 @@
 	overflow: hidden;
 }
 .inner_top_title{
-	height: 44px;
-	line-height: 44px;
+	height: 48px;
+	line-height: 48px;
 	border-bottom: 1px solid rgba(242,242,242,1);
 	padding: 0 18px;
 }
@@ -138,6 +138,9 @@
 }
 .ant-tree > li:first-child{
 	padding: 0  !important;
+}
+.tree_search .ant-input-affix-wrapper .ant-input-suffix{
+	top: 50%;
 }
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -16,11 +16,11 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
 	<Provider store={store}>
 		{/*<PersistGate loading={null} persistor={persistor}>*/}
-			<BrowserRouter>
+			<HashRouter>
 				<ConfigProvider locale={zhCN}>
 					<App />
 				</ConfigProvider>
-			</BrowserRouter>
+			</HashRouter>
 		{/*</PersistGate>*/}
 	</Provider>,
 	document.getElementById('root')

@@ -60,6 +60,7 @@ export default class Index extends Component{
     }
 	
 	componentWillMount(){
+		console.log(window.location)
 		this.listenRouteChange(this.props.location.pathname)
 	}
 	
@@ -91,6 +92,7 @@ export default class Index extends Component{
         return(
             <Layout className="Layout">
 				<TopNavigationBar
+					history={this.props.history}
 					path={this.state.path}
 					menuList={this.state.menuList}></TopNavigationBar>
 				<Content>

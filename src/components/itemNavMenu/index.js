@@ -8,7 +8,7 @@ export default class ItemNavMenu extends Component{
     }
 
 	componentDidMount(){
-		console.log('mount')
+		
 	}
 	
 	switchNavMenu = e => {
@@ -20,13 +20,13 @@ export default class ItemNavMenu extends Component{
             <div className="item_nav_menu">
 				<Menu 
 					onClick={this.switchNavMenu} 
-					selectedKeys={[this.props.currentnavmenu]} 
+					selectedKeys={[String(this.props.currentnavmenu)]} 
 					mode="horizontal">
 					{
 						this.props.itemnavmenu.map((item, index)=> {
 							return (
-								<Menu.Item key={item.id}>
-								  {item.title}{item.num}
+								<Menu.Item key={String(item.id)}>
+								  {item.title}({item.num})
 								</Menu.Item>
 							)
 						})

@@ -1,142 +1,17 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Icon, Input } from 'antd';
+import { Spin, Row, Col, Button, Icon, Input, Select } from 'antd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateProduct, updateLoading, updateContractorList } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import TableComponent from '@/components/tableComponent';
+import { getSaleOrder, getContractorTree, getBaseProduct } from '@/http/api';
+import { trim } from '@/utils/tool'; 
 import './index.css';
 
-const data = [
-  {
-    key: '1',
-    name: '桃田',
-    age: 32,
-    address: '纽约大姐34号',
-  },
-  {
-    key: '2',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '5',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '7',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '8',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '10',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '11',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '13',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '14',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '16',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '17',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '19',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
+const { Option } = Select;
 
-const pagination = {
-	size: 'small',
-	showSizeChanger: true,
-	showQuickJumper: true,
-	total: 200,
-	defaultCurrent: 1,
-	showTotal: total => `共 ${total} 条`,
-	onShowSizeChange: onShowSizeChange
-	
-}
-
-function onShowSizeChange(current, pageSize) {
-  console.log(current, pageSize);
-}
-
-export default class SalesBill extends Component{
+class SalesBill extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -152,32 +27,82 @@ export default class SalesBill extends Component{
 			columns: [
 			  {
 				title: '销售单号',
-				dataIndex: 'name',
+				dataIndex: 'saleOrderSn',
 			  },
 			  {
 				title: '产品', 
-				dataIndex: 'age',
+				dataIndex: 'productName',
 			  },
 			  {
 				title: '客户名称',
-				dataIndex: 'address',
+				dataIndex: 'customerName',
 			  },
 			  {
-				title: '状态',
-				dataIndex: 'status',
+				title: '交易时间',
+				dataIndex: 'createTime',
+			  },
+			  {
+				title: '收支类型',
+				dataIndex: 'tradTypeText',
+			  },
+			  {
+				title: '交易金额',
+				dataIndex: 'tradAmount',
+			  },
+			  {
+				title: '分润收入',
+				dataIndex: 'divideAmount',
+			  },
+			  {
+				title: '操作',
+				key: 'action',
 				render: (text, record) => (
-				    <span className="span_btn_group">
-				    	<span className="span_btn pointer">详情</span>
-				    </span>
+					<span className="span_btn_group">
+						<span 
+							onClick={this.routeEvent.bind(this, record.saleOrderId)} 
+							className="span_btn pointer" >详情</span>
+					</span>
 				)
 			  },
 			],
-			searchBoxFold: true,
+			tableList: [],
+			pagination: {
+				size: 'small',
+				showSizeChanger: true,
+				showQuickJumper: true,
+				total: 0,
+				pageSize: 10, 
+				current: 1,
+				showTotal: total => `共 ${total} 条`,
+				onChange: this.onPaginationChange,
+				onShowSizeChange: this.onPaginationChange
+			},
+			productList: [],
+			contractorList: [],
+			searchBoxFold: false,
+			saleOrderSn: '',
+			customerName: '',
+			productId: 0,
+			contractorId: 0,
+			tradType: 0
 		}
+		this.fetchAllOrder(true)
     }
+	
+	static propTypes = {
+		productList: PropTypes.array,
+		contractorList: PropTypes.array,
+		updateLoading: PropTypes.func,
+		updateProduct: PropTypes.func,
+		updateContractorList: PropTypes.func,
+	}
+	
+	componentWillMount(){
+		
+	}
 
 	componentDidMount(){
-		
+		this.fetchSelectOptions()
 	}
 	
 	hideModal = () => {
@@ -185,6 +110,10 @@ export default class SalesBill extends Component{
 			visible: false,
 			withdrawStatus: 1,
 		})
+	}
+	
+	routeEvent = (saleOrderId) => {
+		this.props.history.push({pathname: "/index/billingcenter/salebillinfo", state: {id: saleOrderId}})
 	}
 	
 	withDrawEvent = ()=> {
@@ -198,8 +127,138 @@ export default class SalesBill extends Component{
 			searchBoxFold: bool
 		})
 	}
+	
+	onPaginationChange = (current, pageSize)=> {
+		let pagination = this.state.pagination
+		pagination.current = current
+		pagination.pageSize = pageSize
+		this.setState({
+			pagination: pagination
+		})
+		this.fetchAllOrder()
+	}
+	
+	onInputChange = (name, e) => {
+		e.persist()
+		this.setState({
+			[name]: e.target.value
+		})
+	}
+	
+	onSelectChange = (name, e) => {
+		this.setState({
+			[name]: e
+		})
+	}
+	
+	handleContrancorList = menus => {
+		let contractorList = this.state.contractorList
+		if(Object.prototype.toString.call(menus)==='[object Array]'&&menus.length){
+			menus.forEach((item, index)=> {
+				this.handleContrancorList(item)
+			})
+		}
+		if(Object.prototype.toString.call(menus)==='[object Object]'){
+			for(let key in menus){
+				this.handleContrancorList(menus[key])
+			}
+			contractorList.push({
+				id: menus.id,
+				name: menus.name
+			})
+		}
+		this.setState({
+			contractorList
+		})
+	}
+	
+	fetchSelectOptions = () => {
+		if(this.props.contractorList&&this.props.contractorList.length){
+			this.handleContrancorList(this.props.contractorList)
+		}else{
+			getContractorTree().then(res=> {
+				if(res.code===1){
+					if(res.data.length){
+						let contractorList = res.data
+						this.handleContrancorList(contractorList)
+						this.props.updateContractorList(contractorList)
+					}
+				}
+			})
+		}
+		if(this.props.productList&&this.props.productList.length){
+			this.setState({
+				productList: this.props.productList
+			})
+		}else{
+			getBaseProduct().then(res=> {
+				if(res.code===1){
+					let productList = res.data
+					this.setState({
+						productList
+					})
+					this.props.updateProduct(productList)
+				}
+			})
+		}
+	}
+	
+	resetSearchForm = () => {
+		this.setState({
+			customerName: '',
+			saleOrderSn: '',
+			tradType: 0,
+			contractorId: 0,
+			productId: 0,
+		})
+		this.fetchAllOrder()
+	}
+	
+	fetchAllOrder = (init=false) => {
+		let loading = true
+		let params = {
+			pageNum: this.state.pagination.current,
+			pageSize: this.state.pagination.pageSize
+		}
+		if(trim(this.state.customerName)!=='')params['customerName'] = this.state.customerName
+		if(trim(this.state.saleOrderSn)!=='')params['saleOrderSn'] = this.state.saleOrderSn
+		if(this.state.tradType)params['tradType'] = this.state.tradType
+		if(this.state.contractorId)params['contractorId'] = this.state.contractorId
+		if(this.state.productId)params['productId'] = this.state.productId
+		
+		this.props.updateLoading(loading)
+		getSaleOrder(params).then(res=> {
+			if(res.code===1){
+				let { pagination } = this.state
+				let tableList = res.data.list.map((item, index)=> {
+					item["key"] = item.saleOrderId;
+					item['createTime'] = item.createTime?item.createTime.replace(/T/g, " ").replace(/\.000\+0000/g, ""):'';
+					item["tradTypeText"] = item.tradType===1?'收入':'支出';
+					item['tradAmount'] = item.tradAmount + '元';
+					item['divideAmount'] = item.divideAmount + '元';
+					return item
+				})
+				pagination.total = res.data.total
+				if(init){
+					this.state.tableList = tableList
+					this.state.pagination = pagination
+				}else{
+					this.setState({
+						tableList,
+						pagination
+					})
+				}
+			}
+			loading = false
+			this.props.updateLoading(loading)
+		}).catch(err=> {
+			loading = false
+			this.props.updateLoading(loading)
+		})
+	}
 
     render(){
+		const { productList, contractorList } = this.state
         return(
             <div className="container_wrap">
 				<BreadCrumb 
@@ -214,9 +273,13 @@ export default class SalesBill extends Component{
 										<Row>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>销售单号:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Input 
+														value={this.state.saleOrderSn}
+														onChange={this.onInputChange.bind(this, 'saleOrderSn')}
+														placeholder="请输入" 
+														allowClear/>
 												  </span>
 											  </div>
 											</Col>
@@ -224,39 +287,63 @@ export default class SalesBill extends Component{
 											  <div className="search_item flex_box align_items_center">
 												  <span>筛选产品:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select
+														value={this.state.productId} 
+														onChange={this.onSelectChange.bind(this, 'productId')}>
+														<Option value={0}>全部</Option>
+														{
+															productList.length>0 && productList.map(item=> {
+																return (
+																	<Option key={item.id} value={item.id}>{item.name}</Option>
+																)
+															})
+														}
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>客户名称:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Input 
+														value={this.state.customerName}
+														onChange={this.onInputChange.bind(this, 'customerName')}
+														placeholder="请输入" 
+														allowClear/>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>授权工程商:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select
+														value={this.state.contractorId} 
+														onChange={this.onSelectChange.bind(this, 'contractorId')}>
+															<Option value={0}>全部</Option>
+															{
+																contractorList.length>0 && contractorList.map(item=> {
+																	return (
+																		<Option key={item.id} value={item.id}>{item.name}</Option>
+																	)
+																})
+															}
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>收支类型:</span>
 												  <span>
-													  <Input placeholder="请输入" />
-												  </span>
-											  </div>
-											</Col>
-											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
-											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
-												  <span>
-													  <Input placeholder="请输入" />
+													  <Select
+														value={this.state.tradType} 
+														onChange={this.onSelectChange.bind(this, 'tradType')}>
+														<Option value={0}>全部</Option>
+														<Option value={1}>收入</Option>
+														<Option value={2}>支出</Option>
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
@@ -266,8 +353,8 @@ export default class SalesBill extends Component{
 												<Icon type="up" />
 												<span>收起</span>
 											</div>
-											<Button type="primary">搜索</Button>
-											<Button>重置</Button>
+											<Button onClick={this.fetchAllOrder} type="primary">搜索</Button>
+											<Button onClick={this.resetSearchForm}>重置</Button>
 										</div>
 									</div>
 								)
@@ -278,9 +365,13 @@ export default class SalesBill extends Component{
 										<Row>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>销售单号:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Input 
+														value={this.state.saleOrderSn}
+														onChange={this.onInputChange.bind(this, 'saleOrderSn')}
+														placeholder="请输入" 
+														allowClear/>
 												  </span>
 											  </div>
 											</Col>
@@ -288,19 +379,29 @@ export default class SalesBill extends Component{
 											  <div className="search_item flex_box align_items_center">
 												  <span>筛选产品:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select
+														value={this.state.productId} 
+														onChange={this.onSelectChange.bind(this, 'productId')}>
+														<Option value={0}>全部</Option>
+														{
+															productList.length>0 && productList.map(item=> {
+																return (
+																	<Option key={item.id} value={item.id}>{item.name}</Option>
+																)
+															})
+														}
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
-											
 										</Row>
 										<div className="search_btn_group flex_box align_items_center open_search_box">
 											<div onClick={this.toggleFoldSearch.bind(this, true)} className="icon_up_down flex_box align_items_center theme_color pointer">
 												<Icon type="down" />
 												<span>展开</span>
 											</div>
-											<Button type="primary">搜索</Button>
-											<Button>重置</Button>
+											<Button onClick={this.fetchAllOrder} type="primary">搜索</Button>
+											<Button onClick={this.resetSearchForm}>重置</Button>
 										</div>
 									</div>
 								)
@@ -308,8 +409,8 @@ export default class SalesBill extends Component{
 							
 							<TableComponent
 								columns={this.state.columns}
-								data={data} 
-								pagination={pagination}></TableComponent>
+								data={this.state.tableList} 
+								pagination={this.state.pagination}></TableComponent>
 						</div>
 					</div>
 				</div>
@@ -317,3 +418,14 @@ export default class SalesBill extends Component{
         )
     }
 }
+
+
+export default connect(state => ({
+	productList: state.storeState.productList,
+	contractorList: state.storeState.contractorList,
+ }),{
+		updateLoading,
+		updateProduct,
+		updateContractorList
+	}
+)(SalesBill);

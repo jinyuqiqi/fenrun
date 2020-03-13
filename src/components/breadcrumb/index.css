@@ -9,9 +9,9 @@
 	z-index: 301;
 	background: #EFF2F7;
 	/* box-shadow: 0 0 5px #888; */
-	width: calc(100% - 15px);
-	width: -moz-calc(100% - 15px);
-	width: -webkit-calc(100% - 15px);
+	width: calc(100% - 18px);
+	width: -moz-calc(100% - 18px);
+	width: -webkit-calc(100% - 18px);
 }
 .bread_wrap .ant-breadcrumb{
 	height: 36px;

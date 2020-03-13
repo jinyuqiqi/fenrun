@@ -78,7 +78,7 @@ export default class Staff extends Component{
     }
 
 	componentDidMount(){
-		console.log('mount')
+		
 	}
 	
 	deleteEvent = id => {

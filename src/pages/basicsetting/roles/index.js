@@ -64,7 +64,6 @@ export default class Roles extends Component{
     }
 
 	componentDidMount(){
-		console.log('mount')
 	}
 	
 	routePageEvent = (pathname)=> {

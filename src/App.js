@@ -11,7 +11,7 @@ const Login = Loadable(()=> import('@/pages/login'))
 
 class App extends Component {
 	constructor(props){
-	    super(props);
+	    super(props); 
 		const that = this
 		window.onbeforeunload = function(event){
 			window.sessionStorage.setItem('storageStates', JSON.stringify(that.props.storageStates))

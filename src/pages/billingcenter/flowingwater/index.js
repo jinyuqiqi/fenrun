@@ -1,142 +1,21 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Icon, Input } from 'antd';
+import { Row, Col, Button, Icon, Input, Select, DatePicker  } from 'antd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { updateLoading } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import TableComponent from '@/components/tableComponent';
+import { getFlowingOrder } from '@/http/api';
+import moment from 'moment';
+import { trim } from '@/utils/tool'; 
+import locale from 'antd/lib/date-picker/locale/zh_CN';
+import 'moment/locale/zh-cn';
 import './index.css';
+moment.locale('zh-cn');
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
-const data = [
-  {
-    key: '1',
-    name: '桃田',
-    age: 32,
-    address: '纽约大姐34号',
-  },
-  {
-    key: '2',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '5',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '7',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '8',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '10',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '11',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '13',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '14',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '16',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '17',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '19',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
-
-const pagination = {
-	size: 'small',
-	showSizeChanger: true,
-	showQuickJumper: true,
-	total: 200,
-	defaultCurrent: 1,
-	showTotal: total => `共 ${total} 条`,
-	onShowSizeChange: onShowSizeChange
-	
-}
-
-function onShowSizeChange(current, pageSize) {
-  console.log(current, pageSize);
-}
-
-export default class FlowingWater extends Component{
+class FlowingWater extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -151,30 +30,56 @@ export default class FlowingWater extends Component{
 			],
 			columns: [
 			  {
-				title: '销售单号',
-				dataIndex: 'name',
+				title: '订单编号/销量编号',
+				dataIndex: 'tradNo',
 			  },
 			  {
-				title: '产品', 
-				dataIndex: 'age',
+				title: '财务类型', 
+				dataIndex: 'tradTypeText',
 			  },
 			  {
-				title: '客户名称',
-				dataIndex: 'address',
+				title: '收支类型',
+				dataIndex: 'capitalTypeText',
 			  },
 			  {
-				title: '状态',
-				dataIndex: 'status',
-				render: (text, record) => (
-				    <span className="span_btn_group">
-				    	<span className="span_btn pointer">详情</span>
-				    </span>
-				)
+				title: '交易时间',
+				dataIndex: 'tradDate',
+			  },
+			  {
+				title: '金额',
+				dataIndex: 'amount',
+			  },
+			  {
+				title: '说明',
+				dataIndex: 'descContext'
 			  },
 			],
-			searchBoxFold: true,
+			tableList: [],
+			pagination: {
+				size: 'small',
+				showSizeChanger: true,
+				showQuickJumper: true,
+				total: 0,
+				pageSize: 10, 
+				current: 1,
+				showTotal: total => `共 ${total} 条`,
+				onChange: this.onPaginationChange,
+				onShowSizeChange: this.onPaginationChange
+			},
+			searchBoxFold: false,
+			tradeNo: '',
+			tradType: 0,
+			capitalType: 0,
+			dateMoment: [],
+			tradDate: []
 		}
+		
+		this.fetchAllOrder()
     }
+	
+	static propTypes = {
+		updateLoading: PropTypes.func,
+	}
 
 	componentDidMount(){
 		
@@ -198,6 +103,86 @@ export default class FlowingWater extends Component{
 			searchBoxFold: bool
 		})
 	}
+	
+	onPaginationChange = (current, pageSize)=> {
+		let pagination = this.state.pagination
+		pagination.current = current
+		pagination.pageSize = pageSize
+		this.setState({
+			pagination: pagination
+		})
+		this.fetchAllOrder()
+	}
+	
+	resetSearchForm = () => {
+		this.setState({
+			tradeNo: '',
+			tradType: 0,
+			capitalType: 0,
+			tradDate: [],
+			dateMoment: []
+		})
+		this.fetchAllOrder()
+	}
+	
+	fetchAllOrder = () => {
+		let loading = true
+		let params = {
+			pageNum: this.state.pagination.current,
+			pageSize: this.state.pagination.pageSize
+		}
+		if(trim(this.state.tradeNo)!=='')params['tradeNo'] = this.state.tradeNo
+		if(this.state.tradType)params['tradType'] = this.state.tradType
+		if(this.state.capitalType)params['capitalType'] = this.state.capitalType
+		if(this.state.tradDate.length){
+			params['tradeDateSt'] = this.state.tradDate[0]
+			params['tradeDateEn'] = this.state.tradDate[1]
+		}
+		this.props.updateLoading(loading)
+		getFlowingOrder(params).then(res=> {
+			if(res.code===1){
+				let pagination = this.state.pagination
+				let tableList = res.data.list.map((item, index)=> {
+					item['key'] = index+'x';
+					item['amount'] = item.amount+'元';
+					item['tradTypeText'] = item.tradType===1?'收入':'支出';
+					item['capitalTypeText'] = item.capitalType===1?'订单交易':(item.capitalType===2?'产品销售':'提现');
+					item['tradDate'] = item.tradDate?item.tradDate.replace(/T/g, " ").replace(/\.000\+0000/g, ""):'';
+					return item
+				})
+				pagination.total = res.data.total
+				this.setState({
+					tableList,
+					pagination
+				})
+			}
+			loading = false
+			this.props.updateLoading(loading)
+		}).catch(err=> {
+			loading = false
+			this.props.updateLoading(loading)
+		})
+	}
+	
+	onSelectChange = (name, e) => {
+		this.setState({
+			[name]: e
+		})
+	}
+	
+	onTimeChange = (moment, dateString) => {
+		this.setState({
+			dateMoment: moment,
+			tradDate: dateString
+		})
+	}
+	
+	onInputChange = e => {
+		e.persist()
+		this.setState({
+			tradeNo: e.target.value
+		})
+	}
 
     render(){
         return(
@@ -214,49 +199,53 @@ export default class FlowingWater extends Component{
 										<Row>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>订单编号:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Input 
+														value={this.state.tradeNo}
+														onChange={this.onInputChange}
+														placeholder="请输入" 
+														allowClear/>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>收支类型:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select 
+														value={this.state.tradType} 
+														onChange={this.onSelectChange.bind(this, 'tradType')}>
+														<Option value={0}>全部</Option>
+														<Option value={1}>收入</Option>
+														<Option value={2}>支出</Option>
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>账务类型:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select 
+														value={this.state.capitalType} 
+														onChange={this.onSelectChange.bind(this, 'capitalType')}>
+														<Option value={0}>全部</Option>
+														<Option value={1}>订单交易</Option>
+														<Option value={2}>产品销售</Option>
+														<Option value={2}>提现</Option>
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>选择日期:</span>
 												  <span>
-													  <Input placeholder="请输入" />
-												  </span>
-											  </div>
-											</Col>
-											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
-											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
-												  <span>
-													  <Input placeholder="请输入" />
-												  </span>
-											  </div>
-											</Col>
-											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
-											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
-												  <span>
-													  <Input placeholder="请输入" />
+													  <RangePicker 
+														locale={locale} 
+														value={this.state.dateMoment}
+														onChange={this.onTimeChange} />
 												  </span>
 											  </div>
 											</Col>
@@ -266,8 +255,8 @@ export default class FlowingWater extends Component{
 												<Icon type="up" />
 												<span>收起</span>
 											</div>
-											<Button type="primary">搜索</Button>
-											<Button>重置</Button>
+											<Button onClick={this.fetchAllOrder} type="primary">搜索</Button>
+											<Button onClick={this.resetSearchForm}>重置</Button>
 										</div>
 									</div>
 								)
@@ -278,29 +267,38 @@ export default class FlowingWater extends Component{
 										<Row>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>订单编号:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Input 
+														value={this.state.tradeNo}
+														onChange={this.onInputChange}
+														placeholder="请输入" 
+														allowClear/>
 												  </span>
 											  </div>
 											</Col>
 											<Col xs={12} sm={8} md={8} lg={8} xl={8} xxl={6}>
 											  <div className="search_item flex_box align_items_center">
-												  <span>筛选产品:</span>
+												  <span>收支类型:</span>
 												  <span>
-													  <Input placeholder="请输入" />
+													  <Select 
+														value={this.state.tradType} 
+														onChange={this.onSelectChange.bind(this, 'tradType')}>
+														<Option value={0}>全部</Option>
+														<Option value={1}>收入</Option>
+														<Option value={2}>支出</Option>
+													  </Select>
 												  </span>
 											  </div>
 											</Col>
-											
 										</Row>
 										<div className="search_btn_group flex_box align_items_center open_search_box">
 											<div onClick={this.toggleFoldSearch.bind(this, true)} className="icon_up_down flex_box align_items_center theme_color pointer">
 												<Icon type="down" />
 												<span>展开</span>
 											</div>
-											<Button type="primary">搜索</Button>
-											<Button>重置</Button>
+											<Button onClick={this.fetchAllOrder} type="primary">搜索</Button>
+											<Button onClick={this.resetSearchForm}>重置</Button>
 										</div>
 									</div>
 								)
@@ -308,8 +306,8 @@ export default class FlowingWater extends Component{
 							
 							<TableComponent
 								columns={this.state.columns}
-								data={data} 
-								pagination={pagination}></TableComponent>
+								data={this.state.tableList} 
+								pagination={this.state.pagination}></TableComponent>
 						</div>
 					</div>
 				</div>
@@ -317,3 +315,10 @@ export default class FlowingWater extends Component{
         )
     }
 }
+
+export default connect(
+	null, 
+	{
+		updateLoading
+	}
+)(FlowingWater);

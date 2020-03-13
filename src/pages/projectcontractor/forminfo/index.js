@@ -3,7 +3,7 @@ import { Select, InputNumber, Switch, Input, Icon, Button, Radio } from 'antd';
 import message from '@/utils/message';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { updateContractor } from '@/store/reducer/action';
+import { updateStatus, updateCurrentInfo } from '@/store/reducer/action';
 import { trim, testSpace, testPhone, testNum, testNumber, testMobile, getNowFormatDate } from '@/utils/tool'; 
 import { getRandomNum, getProductList, addContractor } from '@/http/api';
 import './index.css';
@@ -48,12 +48,15 @@ class FormInfo extends Component{
 	
 	static propTypes = {
 		contractorForm: PropTypes.object.isRequired,
+		updateStatus: PropTypes.func,
+		updateCurrentInfo: PropTypes.func,
 	    // updateContractor: PropTypes.func.isRequired
 	}
 	
 	componentWillReceiveProps(nextProps){
 		let pid = nextProps.contractorForm.id
 		if(pid!==this.state.contractorsForm.pid){
+			this.fetchRandomNum()
 			this.updateStateForm(nextProps.contractorForm)
 		}
 	}
@@ -198,8 +201,9 @@ class FormInfo extends Component{
 		if(Number(e.target.value)<=0&&e.target.value!='') return
 		
 		let { productList } = this.state
+		let profit = Number(e.target.value) - productList[index].list[idx].originalPrice
 		productList[index].list[idx].price = e.target.value
-		productList[index].list[idx].profit = e.target.value===""?0:e.target.value
+		productList[index].list[idx].profit = e.target.value===""?0:profit
 		
 		if(productList[index].list[idx].error){
 			productList[index].list[idx].error = false
@@ -217,14 +221,24 @@ class FormInfo extends Component{
 		addContractor(ContractorsForm).then(res=> {
 			if(res.code===1){
 				message.success('成功')
-				// let contractorForm = {
-				// 	id: res.data,
-				// }
-				// this.props.updateContractor({id: res.data})
-				this.props.history.replace({pathname: "/index/projectcontractor/detailinfo", state: {id: res.data}})
+				
+				let plyload = {
+					willUpdate: true,
+					updateCurrentId: res.data
+				}
+				this.props.updateCurrentInfo(plyload)
+				this.props.history.replace({pathname: "/index/projectcontractor/detailinfo"})
 			}
 		})
-		// this.props.history.replace({pathname: "/index/projectcontractor/detailinfo"})
+	}
+	
+	cancelEvent = () => {
+		let plyload = {
+			willUpdate: true,
+			updateCurrentId: this.state.contractorsForm.pid
+		}
+		this.props.updateCurrentInfo(plyload)
+		this.props.history.replace({pathname: "/index/projectcontractor/detailinfo"})
 	}
 	
 	verifyParams = () => {
@@ -262,18 +276,20 @@ class FormInfo extends Component{
 		}
 		if(productList){
 			productList.forEach(item=> {
-				item.list.forEach(val=> {
-					if(isNaN(val.price)){
-						val.error = true
-						val.errtext = '请输入正确的数字金额'
-						result = false
-					}
-					if(trim(val.price)===""){
-						val.error = true
-						val.errtext = '请输入'
-						result = false
-					}	
-				})
+				if(item.use){
+					item.list.forEach(val=> {
+						if(isNaN(val.price)){
+							val.error = true
+							val.errtext = '请输入正确的数字金额'
+							result = false
+						}
+						if(trim(val.price)===""){
+							val.error = true
+							val.errtext = '请输入'
+							result = false
+						}	
+					})
+				}
 			})
 			this.setState({
 				productList
@@ -290,12 +306,16 @@ class FormInfo extends Component{
 		if(productList){
 			productList.forEach(item=> {
 				if(item.use&&item.list){
+					goodsInfoList.push({
+						cstatus: item.status,
+						goodsId: item.id,
+						group: item.group,
+					})
 					item.list.forEach(val=> {
 						goodsInfoList.push({
 							cstatus: val.status,
 							goodsId: val.id,
 							group: val.group,
-							// id: val.id,
 							price: val.price
 						})
 					})
@@ -312,10 +332,10 @@ class FormInfo extends Component{
         return(
             <div className="right_wraper">
 				<div className="inner_top_title flex_box flex_between">
-					<span className="default_title">二级商基本信息</span>
+					<span className="default_title">工程商基本信息</span>
 					<div className="inner_top_title_btns">
 						<Button onClick={this.submitEvent} type="primary">确定</Button>
-						<Button>删除</Button>
+						<Button onClick={this.cancelEvent}>取消</Button>
 					</div>
 				</div>
 				<div className="contractor_box">
@@ -550,4 +570,7 @@ class FormInfo extends Component{
 
 export default connect(state => ({
 	contractorForm: state.storeState.contractorForm,
- }), null)(FormInfo);
+ }), {
+	 updateStatus,
+	 updateCurrentInfo
+ })(FormInfo);

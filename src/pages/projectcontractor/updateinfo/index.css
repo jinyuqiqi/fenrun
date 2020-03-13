@@ -1,0 +1,34 @@
+.right_wraper .ant-input,
+.right_wraper .ant-select-selection__rendered,
+.right_wraper .ant-select.ant-select-enabled{
+	width: 200px !important;
+}
+
+.ant-radio-group .ant-radio-wrapper:last-child{
+	margin-right: 0;
+	margin-left: 100px;
+}
+.right_wraper .ant-input-number{
+	width: 200px;
+}
+.right_wraper input.ant-input-number-input::-webkit-outer-spin-button,
+.right_wraper input.ant-input-number-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+.right_wraper input.ant-input-number-input[type="number"]{
+	-moz-appearance: textfield;
+}
+.right_wraper .ant-input-number-handler-wrap{
+	display: none !important;
+}
+.rename_icon{
+	margin-right: 10px;
+	opacity: 0.8;
+}
+.rename_icon:hover{
+	opacity: 1;
+}
+.rename_icon .anticon{
+	font-size: 18px;
+	color: #E02020 !important;
+}

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { Spin } from 'antd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import BreadCrumb from '@/components/breadcrumb';
 import LeftNavMenu from '@/components/leftNavMenu';
 import Loadable from '@/components/loadable';
@@ -8,12 +11,15 @@ import './index.css';
 const SalesBill = Loadable(()=> import('@/pages/billingcenter/salesbill'));
 const BusinessBill = Loadable(()=> import('@/pages/billingcenter/businessbill'));
 const FlowingWater = Loadable(()=> import('@/pages/billingcenter/flowingwater'));
+const SaleBillInfo = Loadable(()=> import('@/pages/billingcenter/salebillinfo'));
 
-export default class BillingCenter extends Component{
+
+class BillingCenter extends Component{
 	constructor(props){
         super(props);
 		this.state = {
 			path: null,
+			loading: true,
 			leftMenuList: [
 				{
 					path: '/index/billingcenter/salesbill',
@@ -29,17 +35,14 @@ export default class BillingCenter extends Component{
 				}
 			]
 		}
-		
-		// console.log(props.location.pathname.substr())
+		this.state.path = this.props.location.pathname
     }
 	
-	componentWillMount(){
-		this.listenRouteChange(this.props.location.pathname)
+	static propTypes = {
+		loading: PropTypes.bool,
 	}
 	
 	componentWillReceiveProps(nextProps) {
-		console.log(this.props)
-		console.log(nextProps)
 	    if (nextProps.location.pathname !== this.props.location.pathname) {
 			this.listenRouteChange(nextProps.location.pathname)
 	    } 
@@ -62,14 +65,22 @@ export default class BillingCenter extends Component{
 					path={this.state.path}
 					leftMenuList={this.state.leftMenuList}></LeftNavMenu>
 				<div className="right_content">
-					<Switch>
-						<Route path='/index/billingcenter/salesbill' component={SalesBill} />
-						<Route path='/index/billingcenter/businessbill' component={BusinessBill} />
-						<Route path='/index/billingcenter/flowingwater' component={FlowingWater} />
-						<Redirect to='/index/billingcenter/salesbill'  />
-					</Switch>
+					<Spin spinning={this.props.loading}>
+						<Switch>
+							<Route path='/index/billingcenter/salesbill' component={SalesBill} />
+							<Route path='/index/billingcenter/businessbill' component={BusinessBill} />
+							<Route path='/index/billingcenter/flowingwater' component={FlowingWater} />
+							<Route path='/index/billingcenter/salebillinfo' component={SaleBillInfo} />
+							<Redirect to='/index/billingcenter/salesbill'  />
+						</Switch>
+					</Spin>
 				</div>
             </div>  
         )
     }
 }
+
+export default connect(state => ({
+	loading: state.storeState.loading,
+ }), null)(BillingCenter);
+
