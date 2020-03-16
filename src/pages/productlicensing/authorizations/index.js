@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Button, Icon, Input, Select, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Base64 } from 'js-base64';
 import BreadCrumb from '@/components/breadcrumb';
 import ItemNavMenu from '@/components/itemNavMenu';
 import TableComponent from '@/components/tableComponent';
@@ -70,9 +71,14 @@ class Authorizations extends Component{
 				dataIndex: 'action',
 				render: (text, record) => (
 				    <span className="span_btn_group">
-				    	<span 
-				    		onClick={this.routeEvent.bind(this, record.saleOrderId)} 
-				    		className="span_btn pointer" >详情</span>
+						{
+							this.state.myAuth.viewa&&(
+								<span
+									onClick={this.routeEvent.bind(this, record.saleOrderId)} 
+									className="span_btn pointer" >详情</span>
+							)
+						}
+				    	
 				    </span>
 				)
 			  },
@@ -105,7 +111,8 @@ class Authorizations extends Component{
 			contractorId: 0,
 			customerName: '',
 			projectNo: '',
-			projectName: ''
+			projectName: '',
+			myAuth: {},
 		}
     }
 	
@@ -121,11 +128,16 @@ class Authorizations extends Component{
 	}
 	
 	componentWillMount(){
+		let productAuths = JSON.parse(Base64.decode(sessionStorage.getItem('productAuths')))
+		this.setState({
+			myAuth: productAuths
+		})
 		this.fetchProduct()
 		this.fetchSaleCount()
 	}
 
 	componentDidMount(){
+		
 		this.fetchAllOrder()
 		this.fetchSelectOptions()
 	}
@@ -337,9 +349,20 @@ class Authorizations extends Component{
 															<div className="num_xlarge">{item.authingCount}</div>
 														</div>
 													</div>
-													<div className="authorize_btn pointer" onClick={this.routePageEvent.bind(this, item.id)}>
-														<span className="theme_color">授权产品</span>
-													</div>
+													{
+														this.state.myAuth.impower&&(
+															<div className="authorize_btn pointer" onClick={this.routePageEvent.bind(this, item.id)}>
+																<span className="theme_color">授权产品</span>
+															</div>
+														)
+													}
+													{
+														!this.state.myAuth.impower&&(
+															<div className="authorize_btn pointer">
+																<span className="theme_color"></span>
+															</div>
+														)
+													}
 												</div>
 											)
 										})

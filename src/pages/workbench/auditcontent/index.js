@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Row, Col, Table, Spin, Modal } from 'antd';
+import { Base64 } from 'js-base64';
 import BreadCrumb from '@/components/breadcrumb';
 import GlobalModal from '@/components/globalModal';
 import ModalReject from '@/components/modalReject';
@@ -30,6 +31,7 @@ export default class AuditContent extends Component{
 	constructor(props){
         super(props);
 		this.state = {
+			myAuth: {},
 			title: '驳回',
 			dialog: 'turndown',
 			loading: false,
@@ -53,6 +55,11 @@ export default class AuditContent extends Component{
     }
 	
 	componentWillMount(){
+		let workbenchAuths = JSON.parse(Base64.decode(sessionStorage.getItem('workbenchAuths')))
+		this.setState({
+			myAuth: workbenchAuths
+		})
+		
 		if(this.props.location.state){
 			this.takeSaleInfo(this.props.location.state.id)
 			this.setState({
@@ -208,10 +215,14 @@ export default class AuditContent extends Component{
 							<div className="srcoll_box_inner">
 								<div className="inner_top_title flex_box flex_between">
 									<span className="default_title">审核内容</span>
-									<div className="inner_top_title_btns">
-										<Button type="primary" onClick={this.enterLoading}>审核通过</Button>
-										<Button type="danger" onClick={this.trunDownEvent}>驳回</Button>
-									</div>
+									{
+										this.state.myAuth.audit&&this.state.myAuth.audit.operate&&(
+											<div className="inner_top_title_btns">
+												<Button type="primary" onClick={this.enterLoading}>审核通过</Button>
+												<Button type="danger" onClick={this.trunDownEvent}>驳回</Button>
+											</div>
+										)
+									}
 								</div>
 								<div className="audit_inner">
 									<div className="audit_inner_module">

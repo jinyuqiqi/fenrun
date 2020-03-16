@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
+import { Base64 } from 'js-base64';
 import BreadCrumb from '@/components/breadcrumb';
 import TableComponent from '@/components/tableComponent';
 import { getAllRoles, removeRole } from '@/http/api';
@@ -28,12 +29,20 @@ export default class Roles extends Component{
 				key: 'action',
 				render: (text, record) => (
 				    <span className="span_btn_group">
-						<span 
-							className="span_btn pointer" 
-							onClick={() => this.editRole(record)}>编辑</span>
-				    	<span 
-							className="span_btn pointer return_color" 
-							onClick={() => this.deleteRole(record)}>删除</span>
+						{
+							this.state.myAuth.updaterole&&(
+								<span
+									className="span_btn pointer" 
+									onClick={() => this.editRole(record)}>编辑</span>
+							)
+						}
+						{
+							this.state.myAuth.delrole&&(
+								<span
+									className="span_btn pointer return_color" 
+									onClick={() => this.deleteRole(record)}>删除</span>
+							)
+						}
 				    </span>
 				)
 			  },
@@ -59,11 +68,16 @@ export default class Roles extends Component{
 					title: '角色管理',
 				}
 			],
+			myAuth: {},
 		}
 		this.fetchRoles()
     }
 
-	componentDidMount(){
+	componentWillMount(){
+		let baseAuthInfo = JSON.parse(Base64.decode(sessionStorage.getItem('baseAuthInfo')))
+		this.setState({
+			myAuth: baseAuthInfo
+		})
 	}
 	
 	routePageEvent = (pathname)=> {
@@ -136,7 +150,11 @@ export default class Roles extends Component{
             		<div className="srcoll_box_inner">
 						<div className="inner_top_title flex_box flex_between">
 							<span className="top_btn">
-								<Button type="primary" onClick={this.routePageEvent.bind(this, '/index/basicsetting/addingrole')}>创建角色</Button>
+								{
+									this.state.myAuth.addrole&&(
+										<Button type="primary" onClick={this.routePageEvent.bind(this, '/index/basicsetting/addingrole')}>创建角色</Button>
+									)
+								}
 							</span>
 							<div></div>
 						</div>

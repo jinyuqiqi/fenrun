@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
 import { Base64 } from 'js-base64';
-import { login, getUsetInfo } from '@/http/api';
+import { login, getUsetInfo, getUserAuthMenu } from '@/http/api';
 import { testSpace } from '@/utils/tool';
 import './index.css';
 const errorText = '请输入正确的用户名或密码'
@@ -40,12 +40,22 @@ export default class Login extends Component{
 				window.sessionStorage.setItem('type', type)
 				window.sessionStorage.setItem('roleId', roleId)
 				window.sessionStorage.setItem('token', res.data.token)
+				
 				getUsetInfo().then(res=> {
 					if(res.code===1){
+						
 						let userInfo = Base64.encode(JSON.stringify(res.data))
 						window.sessionStorage.setItem('userInfo', userInfo)
-						message.success('成功!')
-						this.props.history.replace({pathname: '/index'})
+						getUserAuthMenu().then(res=> {
+							if(res.code===1){
+								message.success('成功!')
+								let myAuthMenu = Base64.encode(JSON.stringify(res.data))
+								window.sessionStorage.setItem('myAuthMenu', myAuthMenu)
+								this.props.history.replace({pathname: '/index'})
+							}
+							// console.log(res)
+						})
+						
 					}
 				})
 				

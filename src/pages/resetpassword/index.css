@@ -1,0 +1,19 @@
+.inner_top_title{
+	height: 48px;
+	line-height: 48px;
+	border-bottom: 1px solid rgba(242,242,242,1);
+	padding: 0 18px;
+}
+.main_form{
+	text-align: center;
+	padding-top: 60px;
+}
+.item_pass{
+	width: 360px;
+	margin: 24px auto 0;
+}
+.item_pass .flex_between{
+	height: 34px;
+	line-height: 34px;
+}
+

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Button, Icon } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { getAuthPopInfoDown } from '@/http/api';
+import axios from 'axios';
 import './index.css';
 
 export default class ModalAuthorInfo extends Component{
@@ -12,7 +13,43 @@ export default class ModalAuthorInfo extends Component{
 	downLoad = () => {
 		let id = this.props.authInfo[0].id
 		let type = this.props.authInfo[0].type
-		getAuthPopInfoDown({id: id,type: type})
+	// 	axios.post("http://zhcl.4000750222.com/testdivided/saleOrderInfo/getReviewAccountsDown", {id: id,type: type}).then(response=> {
+	// 			var content = response;
+			 
+	// 			var elink = document.createElement('a');
+	// 			elink.download = `授权信息.xls`;
+	// 			elink.style.display = 'none';
+ 
+	// 			var blob = new Blob([content]);
+	// 			elink.href = URL.createObjectURL(blob);
+ 
+	// 			document.body.appendChild(elink);
+	// 			elink.click();
+ 
+	// 			document.body.removeChild(elink);
+	// 	})
+		// var xmlResquest = new XMLHttpRequest();
+		// 	    xmlResquest.open("POST", "http://zhcl.4000750222.com/testdivided/saleOrderInfo/getReviewAccountsDown", true);
+		// 	    xmlResquest.setRequestHeader("Content-type", "application/json");
+		// 	//     xmlResquest.setRequestHeader("Authorization", "Bearer 6cda86e3-ba1c-4737-972c-f815304932ee");
+		// 		xmlResquest.send({id: id,type: type});
+		// 	    xmlResquest.responseType = "blob";
+		// 	    xmlResquest.onload = function (oEvent) {
+		// 		    var content = xmlResquest.response;
+		// 		    var elink = document.createElement('a');
+		// 		    elink.download = "test.xlsx";
+		// 		    elink.style.display = 'none';
+		// 		    var blob = new Blob([content]);
+		// 		    elink.href = URL.createObjectURL(blob);
+		// 		    document.body.appendChild(elink);
+		// 	        elink.click();
+		// 		    document.body.removeChild(elink);
+				
+					
+		// 	    };
+		//         xmlResquest.send();
+		
+		// getAuthPopInfoDown({id: id,type: type})
 	}
 
     render(){

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Spin, Modal } from 'antd';
+import { Base64 } from 'js-base64';
 import BreadCrumb from '@/components/breadcrumb';
 import ModalReject from '@/components/modalReject';
 import ModalRemit from '@/components/modalRemit';
@@ -15,6 +16,7 @@ export default class Audit extends Component{
 		this.state = {
 			title: '',
 			dialog: '',
+			myAuth: {},
 			visible: false,
 			visible1: false,
 			loading: false,
@@ -81,18 +83,23 @@ export default class Audit extends Component{
 				  title: '操作',
 				  key: 'action',
 				  render: (text, record) => {
-					let node = (
+					return (
 						<span className="span_btn_group">
-							<span 
-								className="span_btn pointer return_color" 
-								onClick={this.onReject.bind(this, record)}>驳回</span>
-							<span 
-								className="span_btn pointer" 
-								onClick={this.remitEvent.bind(this, record)}>打款</span>
+							{
+								this.state.myAuth.audit&&this.state.myAuth.audit.operate&&(
+									<span>
+										<span
+											className="span_btn pointer return_color" 
+											onClick={this.onReject.bind(this, record)}>驳回</span>
+										<span 
+											className="span_btn pointer" 
+											onClick={this.remitEvent.bind(this, record)}>打款</span>
+									</span>
+								)
+							}
 						</span>
 					)
-					return node
-				  },
+				  }
 			  },
 			],
 			columns_a: [
@@ -132,18 +139,21 @@ export default class Audit extends Component{
 				  title: '操作',
 				  key: 'action',
 				  render: (text, record) => {
-					let node = (
+					 return (
 						<span className="span_btn_group">
 							<span 
 								className="span_btn pointer" 
 								onClick={this.routeAuditContent.bind(this, record.saleOrderId, record.productId)}>详情</span>
-							<span 
-								className="span_btn pointer" 
-								onClick={this.auditPass.bind(this, record)}>审核通过</span>
+							{
+								this.state.myAuth.audit&&this.state.myAuth.audit.operate&&(
+									<span
+										className="span_btn pointer" 
+										onClick={this.auditPass.bind(this, record)}>审核通过</span>
+								)
+							}
 						</span>
-					)
-					return node
-				  },
+				    )
+				  }
 				},
 			],
 			columns_l: [
@@ -284,6 +294,13 @@ export default class Audit extends Component{
 			},
 		}
     }
+	
+	componentWillMount(){
+		let workbenchAuths = JSON.parse(Base64.decode(sessionStorage.getItem('workbenchAuths')))
+		this.setState({
+			myAuth: workbenchAuths
+		})
+	}
 	
 	componentDidMount(){
 		this.takeTableCount()

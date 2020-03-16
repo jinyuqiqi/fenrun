@@ -14,7 +14,7 @@
         super(props);
  		this.state = {
 			init: true,
-			token: sessionStorage.getItem(('token')),
+			token: sessionStorage.getItem('token'),
  			breadcrumbList: [
  				{
  					path: '/index/workbench',

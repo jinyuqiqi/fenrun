@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Spin, Modal, Button } from 'antd';
 import ModalCarrier from '@/components/modalCarrier';
 import BreadCrumb from '@/components/breadcrumb';
+import { Base64 } from 'js-base64';
 import ItemNavMenu from '@/components/itemNavMenu';
 import TableComponent from '@/components/tableComponent';
 import { addCustomer, getCustomerList, deleteCustomer } from '@/http/api';
@@ -15,6 +16,7 @@ export default class Customer extends Component{
 			affairId: 0,
 			visible: false,
 			loading: true,
+			myAuth: {},
 			columns: [
 			  {
 				title: '客户名称',
@@ -44,10 +46,22 @@ export default class Customer extends Component{
 				  title: '操作',
 				  key: 'action',
 				  render: (text, record) => (
-				      <span className="span_btn_group">
-				      	<span onClick={this.routePageEvent.bind(this,  record.customerId)} className="span_btn pointer">详情</span>
-						<span onClick={this.addParkingEvent.bind(this, record)} className="span_btn pointer">添加车场</span>
-				  		<span onClick={this.deleteEvent.bind(this, record.customerId)} className="span_btn return_color pointer">删除</span>
+				    <span className="span_btn_group">
+						{
+							this.state.myAuth.viewc&&(
+								<span onClick={this.routePageEvent.bind(this,  record.customerId)} className="span_btn pointer">详情</span>
+							)
+						}
+						{
+							this.state.myAuth.addparking&&(
+								<span onClick={this.addParkingEvent.bind(this, record)} className="span_btn pointer">添加车场</span>
+							)
+						}
+						{
+							this.state.myAuth.delparking&&(
+								<span onClick={this.deleteEvent.bind(this, record.customerId)} className="span_btn return_color pointer">删除</span>
+							)
+						}
 				  	</span>
 				  )
 			  },
@@ -75,6 +89,13 @@ export default class Customer extends Component{
 			],
 		}
     }
+	
+	componentWillMount(){
+		let productAuths = JSON.parse(Base64.decode(sessionStorage.getItem('productAuths')))
+		this.setState({
+			myAuth: productAuths
+		})
+	}
 
 	componentDidMount(){
 		this.takeTableList()
@@ -201,7 +222,11 @@ export default class Customer extends Component{
 							<div className="srcoll_box_inner">
 								<div className="inner_top_title flex_box flex_between">
 									<span className="top_btn">
-										<Button onClick={this.modalEvent} type="primary">添加车场运营商</Button>
+										{
+											this.state.myAuth.addcustomer&&(
+												<Button onClick={this.modalEvent} type="primary">添加车场运营商</Button>
+											)
+										}
 									</span>
 									<div></div>
 								</div>

@@ -200,5 +200,12 @@ export const getAuthPopInfoDown = p => {
 	return post('/saleOrderInfo/getReviewAccountsDown', p)
 }
 
+export const updatePassWord = p => {
+	return post('/updatePassword', p)
+}
+
+export const getUserAuthMenu = () => {
+	return get('/sysMenu/treelist')
+}
 
 export const uploadUrl = 'http://zhcl.4000750222.com/testdivided/file/upload'

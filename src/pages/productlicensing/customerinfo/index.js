@@ -46,9 +46,6 @@ export default class CustomerInfo extends Component{
 						<span 
 							onClick={this.routeContent.bind(this, record.saleOrderId)} 
 							className="span_btn pointer">详情</span>
-						<span 
-							onClick={this.deleteParking.bind(this, record.parkingId)} 
-							className="span_btn return_color pointer">删除</span>
 					</span>
 				  )
 			  },

@@ -30,24 +30,30 @@ export default class Withdraw extends Component{
 			balance: '',
 			errorAmount: false,
 			errorText: '',
+			pcardNumber: ''
 		}
     }
-
-	componentDidMount(){
-		let balance = Base64.decode(sessionStorage.getItem('balance'))
-		
-		let bankInfo = Base64.decode(sessionStorage.getItem('bank'));
-		bankInfo = JSON.parse(bankInfo);
-		
-		let openBank = bankInfo.openBank
-		let cardNumber = bankInfo.cardNumber.replace(/(.{4})/g, "$1 ")
-		this.setState({
-			balance,
-			openBank,
-			cardNumber
-		})
-		
+	
+	componentWillMount(){
+		if(sessionStorage.getItem('bank')){
+			let balance = Base64.decode(sessionStorage.getItem('balance'))
+			
+			let bankInfo = JSON.parse(Base64.decode(sessionStorage.getItem('bank')));
+			let openBank = bankInfo.openBank
+			let pcardNumber = bankInfo.cardNumber
+			let cardNumber = bankInfo.cardNumber.replace(/(.{4})/g, "$1 ")
+			this.setState({
+				balance,
+				openBank,
+				cardNumber
+			})
+		}
 	}
+
+	// componentDidMount(){
+		
+		
+	// }
 	
 	hideModal = () => {
 		this.setState({
@@ -59,7 +65,7 @@ export default class Withdraw extends Component{
 		const that = this
 		onWithdraw({
 			withdrawalAmount: this.state.withdrawalAmount,
-			cardNumber: this.state.cardNumber,
+			cardNumber: this.state.pcardNumber,
 			verifyCode: verifyCode,
 			openBank: this.state.openBank
 		}).then(res=> {

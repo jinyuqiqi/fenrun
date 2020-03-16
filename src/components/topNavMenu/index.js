@@ -38,6 +38,14 @@ export default class TopNavigationBar extends Component{
 		sessionStorage.clear()
 		this.props.history.replace({pathname: '/login'})
 	}
+	
+	resetPass = () => {
+		this.setState({
+			setting: false
+		})
+		this.props.history.replace({pathname: '/index/resetpassword'})
+		
+	}
 
     render(){
         return(
@@ -82,7 +90,7 @@ export default class TopNavigationBar extends Component{
 				{
 					this.state.setting&&(
 						<div className="tip_set">
-							<div className="pointer">修改密码</div>
+							<div onClick={this.resetPass} className="pointer">修改密码</div>
 							<div onClick={this.logout} className="pointer">退出登录</div>
 						</div>
 					)

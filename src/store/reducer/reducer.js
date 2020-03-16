@@ -7,6 +7,7 @@ let defaultState = {
 	updateCurrentId: 0,
 	loading: false,
 	auditContent: {},
+	authorityList: null
 }
 
 export const storeState = (state = defaultState , action = {}) => {

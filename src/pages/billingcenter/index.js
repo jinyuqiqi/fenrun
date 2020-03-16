@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Spin } from 'antd';
+import { Base64 } from 'js-base64';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import BreadCrumb from '@/components/breadcrumb';
@@ -20,26 +21,67 @@ class BillingCenter extends Component{
 		this.state = {
 			path: null,
 			loading: true,
-			leftMenuList: [
-				{
+			billPageList: [],
+			leftMenuList: []
+		}
+		
+		let { leftMenuList, billPageList } = this.state
+		let myAuthMenu = JSON.parse(Base64.decode(window.sessionStorage.getItem('myAuthMenu')))
+		let billAuth = myAuthMenu.filter(item => item.menuId === 3)
+		billAuth[0].children.forEach(item=> {
+			if(item.menuId===16){
+				billPageList.push({
+					path: '/index/billingcenter/salesbill',
+					component: SalesBill,
+					key: item.menuId
+				})
+				billPageList.push({
+					path: '/index/billingcenter/salebillinfo',
+					component: SaleBillInfo,
+					key: item.menuId+100
+				})
+				leftMenuList.push({
 					path: '/index/billingcenter/salesbill',
 					title: '销售订单',
-				},
-				{
+					key: item.menuId,
+				})
+			}
+			if(item.menuId===17){
+				billPageList.push({
+					path: '/index/billingcenter/businessbill',
+					component: BusinessBill,
+					key: item.menuId
+				})
+				leftMenuList.push({
 					path: '/index/billingcenter/businessbill',
 					title: '业务订单',
-				},
-				{
+					key: item.menuId,
+				})
+			}
+			if(item.menuId===18){
+				billPageList.push({
+					path: '/index/billingcenter/flowingwater',
+					component: FlowingWater,
+					key: item.menuId
+				})
+				leftMenuList.push({
 					path: '/index/billingcenter/flowingwater',
 					title: '资金流水',
-				}
-			]
-		}
-		this.state.path = this.props.location.pathname
+					key: item.menuId,
+				})
+			}
+		})
+		this.state.leftMenuList = leftMenuList
+		this.state.billPageList = billPageList
     }
 	
 	static propTypes = {
 		loading: PropTypes.bool,
+	}
+	
+	componentWillMount(){
+		
+		this.listenRouteChange(this.props.location.pathname)
 	}
 	
 	componentWillReceiveProps(nextProps) {
@@ -67,11 +109,13 @@ class BillingCenter extends Component{
 				<div className="right_content">
 					<Spin spinning={this.props.loading}>
 						<Switch>
-							<Route path='/index/billingcenter/salesbill' component={SalesBill} />
-							<Route path='/index/billingcenter/businessbill' component={BusinessBill} />
-							<Route path='/index/billingcenter/flowingwater' component={FlowingWater} />
-							<Route path='/index/billingcenter/salebillinfo' component={SaleBillInfo} />
-							<Redirect to='/index/billingcenter/salesbill'  />
+							{
+								this.state.billPageList.map(item=> {
+									return (<Route path={item.path} component={item.component} key={item.key} />)
+								})
+							}
+							
+							<Redirect to={this.state.billPageList[0].path}  />
 						</Switch>
 					</Spin>
 				</div>
