@@ -25,7 +25,7 @@ export default class AuthorizationSteps extends Component{
 		this.state = {
 			submitInfo: null,
 			visible: false,
-			current: 0,
+			current: 1,
 			payInfo: null,
 			productId: null,
 			productName: '',
@@ -81,7 +81,7 @@ export default class AuthorizationSteps extends Component{
 			callFuncPrice: null,
 			callFuncList: [],
 			couponFunc: 1,
-			couponFuncValue: 1,
+			couponFuncValue: 5,
 			couponPrice: 0,
 			cameraFunc: 0,
 			cameraCount: 1,
@@ -464,8 +464,7 @@ export default class AuthorizationSteps extends Component{
 		let id = userInfo.contractorsBasevo.id
 		getProductList({id: id}).then(res=> {
 			if(res.code===1){
-				let filter_data = res.data.filter(item=> item.id === this.state.productId)
-				
+				let filter_data = res.data.filter(item=> item.id === 1)
 				if(filter_data.length){
 					let childrenProList = filter_data[0].list
 					
@@ -545,7 +544,8 @@ export default class AuthorizationSteps extends Component{
 	
 	calculateTotal = () => {
 		let { couponFunc, couponFuncValue, couponPrice, callFunc, callFuncPrice, callFuncValue, cameraFunc, cameraPrice, cameraCount, years, detailVoList } = this.state
-		let totalPrice = (couponPrice*couponFunc + callFuncPrice*callFunc + cameraPrice*cameraCount) * years;
+		let couponTotalPrice = couponFuncValue?couponPrice*couponFunc:0
+		let totalPrice = (couponTotalPrice + callFuncPrice*callFunc + cameraPrice*cameraCount) * years;
 		detailVoList = []
 		if(callFunc){
 			let item = detailVo.get(callFuncValue)
@@ -557,7 +557,7 @@ export default class AuthorizationSteps extends Component{
 			}
 			detailVoList.push(vo)
 		}
-		if(couponFunc){
+		if(couponFunc&&couponFuncValue){
 			let item = detailVo.get(couponFuncValue)
 			let vo = {
 			  "count": 1,

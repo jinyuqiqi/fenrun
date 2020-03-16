@@ -49,7 +49,15 @@ export default class ModalAuthorInfo extends Component{
 		// 	    };
 		//         xmlResquest.send();
 		
-		// getAuthPopInfoDown({id: id,type: type})
+		getAuthPopInfoDown({id: id,type: type}).then(res=> {
+			    let url = window.URL.createObjectURL(new Blob([res]))
+			    let link = document.createElement('a')
+			    link.style.display = 'none'
+			    link.href = url
+			    link.setAttribute('download', 'excel1111.xlsx')
+			    document.body.appendChild(link)
+			    link.click()
+		})
 	}
 
     render(){
