@@ -19,7 +19,7 @@ export default class ModalCarrier extends Component{
         return(
             <Modal
 			  style={{ transform: 'translateY(-50%)', top: '50%'}}
-			  title={this.props.affairId?'添加车场运营商':'添加车场'}
+			  title={this.props.affairId?'添加客户':'添加车场'}
 			  visible={this.props.visible}
 			  onOk={this.props.hideModal}
 			  onCancel={this.props.hideModal}

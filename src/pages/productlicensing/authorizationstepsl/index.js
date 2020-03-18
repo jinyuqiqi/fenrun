@@ -22,8 +22,7 @@ const error_sapce_projectbody = '项目负责人不能包含空格';
 const error_empty_projectbody = '项目负责人不能为空';
 const error_sapce_linkphone = '联系方式格式错误';
 const error_empty_linkphone = '联系方式不能为空';
-
-export default class AuthorizationSteps extends Component{
+export default class AuthorizationStepsL extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -48,39 +47,8 @@ export default class AuthorizationSteps extends Component{
 			customerList: [],
 			childrenProList: [],
 			detailVoList: [],
-			productParkingInfoVo: {
-				cityId: [],
-				cityName: '',
-				customerId: null,
-				customerName: '',
-				longitudeAndLatitude: '',
-				parkType: 0,
-				parkingAttribute: '',
-				parkingLocation: '',
-				parkingName: '',
-			},
-			productCompanyInfoForm: {
-				cityId: [],
-				cityName: '',
-				location: '',
-				companyName: '',
-				projectName: '',
-				projectStatus: 1,
-				projectMainName: '',
-				linkPhone: ''
-			},
-			verifyProduct: {
-				parkingName: false,
-				cityId: false,
-				parkingLocation: false,
-				parkingAttribute: false,
-				customerId: false,
-				companyName: false,
-				projectName: false,
-				location: false,
-				linkPhone: false,
-				projectMainName: false,
-			},
+			productInfoVo: {},
+			verifyProduct: {},
 			parkingErrorText: '',
 			companyErrorText: '',
 			projectErrorText: '',
@@ -100,10 +68,62 @@ export default class AuthorizationSteps extends Component{
 			isAgree: false,
 		}
 		this.state.productId = props.location.state.id
+		this.assignmentState(props.location.state.id)
+		console.log(props.location.state.id)
+		console.log(this.state.productInfoVo)
     }
 
 	componentDidMount(){
 		this.getInitData()
+	}
+	
+	assignmentState = id => {
+		let productInfo,
+			verifyProduct;
+		if(id===1){
+			productInfo = {
+				cityId: [],
+				cityName: '',
+				customerId: null,
+				customerName: '',
+				longitudeAndLatitude: '',
+				parkType: 0,
+				parkingAttribute: '',
+				parkingLocation: '',
+				parkingName: '',
+			}
+			verifyProduct = {
+				parkingName: false,
+				cityId: false,
+				parkingLocation: false,
+				parkingAttribute: false,
+				customerId: false
+			}
+		}
+		if(id===7){
+			productInfo = {
+				cityId: [],
+				cityName: '',
+				location: '',
+				companyName: '',
+				projectName: '',
+				projectStatus: 1,
+				projectMainName: '',
+				linkPhone: ''
+			}
+			verifyProduct = {
+				companyName: false,
+				cityId: false,
+				projectName: false,
+				location: false,
+				linkPhone: false,
+				projectMainName: false,
+			}
+		}
+		this.setState({
+			verifyProduct,
+			productInfo
+		})
 	}
 	
 	nextStep = () => {
@@ -140,11 +160,10 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	handleRemove = e => {
-		let fileList= this.state.fileList.filter(item=> item.status!=='removed')
+		let fileList = this.state.fileList.filter(item=> item.status!=='removed')
 		this.setState({
 			fileList
 		})
-		console.log(fileList)
 	}
 	
 	onCheckboxChange = e => {
@@ -157,19 +176,11 @@ export default class AuthorizationSteps extends Component{
 	
 	onInputChange = (name, e) => {
 		e.persist()
-		let { verifyProduct, productParkingInfoVo, productCompanyInfoForm } = this.state
-		if(this.state.productId === 1){
-			productParkingInfoVo[name] = e.target.value
-			this.setState({
-				productParkingInfoVo
-			})
-		}
-		if(this.state.productId === 7){
-			productCompanyInfoForm[name] = e.target.value
-			this.setState({
-				productCompanyInfoForm
-			})
-		}
+		let { verifyProduct, productInfoVo } = this.state
+		productInfoVo[name] = e.target.value
+		this.setState({
+			productInfoVo
+		})
 		if(verifyProduct[name]){
 			verifyProduct[name] = false
 			this.setState({
@@ -179,25 +190,16 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	onCityCodeChange = (value, option) => {
-		let { verifyProduct, productParkingInfoVo, productCompanyInfoForm } = this.state
+		let { verifyProduct, productInfoVo } = this.state
 		let cityName = ''
 		if(option.length){
 			cityName = option[0].label+''+option[1].label+''+option[2].label
 		}
-		if(this.state.productId === 1){
-			productParkingInfoVo.cityId = value;
-			productParkingInfoVo.cityName = cityName;
-			this.setState({
-				productParkingInfoVo
-			})
-		}
-		if(this.state.productId===7){
-			productCompanyInfoForm.cityId = value;
-			productCompanyInfoForm.cityName = cityName;
-			this.setState({
-				productCompanyInfoForm
-			})
-		}
+		productInfoVo.cityId = value;
+		productInfoVo.cityName = cityName;
+		this.setState({
+			productInfoVo
+		})
 		if(verifyProduct.cityId){
 			verifyProduct.cityId = false
 			this.setState({
@@ -206,24 +208,15 @@ export default class AuthorizationSteps extends Component{
 		}
 	}
 	
-	onSelectChange = (name, e, option) => {
-		let { verifyProduct, productParkingInfoVo, productCompanyInfoForm } = this.state
-		
-		if(this.state.productId === 1){
-			productParkingInfoVo[name] = e
-			if(name==='customerId'){
-				productParkingInfoVo.customerName = option.props.children
-			}
-			this.setState({
-				productParkingInfoVo
-			}) 
+	onSelectChange  = (name, e, option) => {
+		let { verifyProduct, productInfoVo } = this.state
+		productInfoVo[name] = e
+		if(name==='customerId'){
+			productInfoVo.customerName = option.props.children
 		}
-		if(this.state.productId===7){
-			productCompanyInfoForm[name] = e
-			this.setState({
-				productCompanyInfoForm
-			}) 
-		}
+		this.setState({
+			productInfoVo
+		}) 
 		if(verifyProduct[name]){
 			verifyProduct[name] = false
 			this.setState({
@@ -235,10 +228,10 @@ export default class AuthorizationSteps extends Component{
 	onRadioChange = (name, pname, e) => {
 		const that = this
 		if(pname){
-			let { productParkingInfoVo } = this.state
-			productParkingInfoVo[name] = e.target.value
+			let { productInfoVo } = this.state
+			productInfoVo[name] = e.target.value
 			this.setState({
-				productParkingInfoVo
+				productInfoVo
 			}) 
 			return
 		}
@@ -273,94 +266,57 @@ export default class AuthorizationSteps extends Component{
 		if(this.state.productId===7)return this.verifyLyb()
 	}
 	
-	verifyMb = () => {
-		let result = false
-		let { parkingErrorText, verifyProduct, productParkingInfoVo } = this.state
-		if(trim(productParkingInfoVo.parkingName)===""){
-			verifyProduct.parkingName = true
-			parkingErrorText = error_empty
-			result = true
-		}
-		if(testSpace(productParkingInfoVo.parkingName)){
-			verifyProduct.parkingName = true
-			parkingErrorText = error_space
-			result = true
-		}
-		if(trim(productParkingInfoVo.parkingLocation)===""){
-			verifyProduct.parkingLocation = true
-			result = true
-		}
-		if(!productParkingInfoVo.cityId.length){
-			verifyProduct.cityId = true
-			result = true
-		}
-		if(trim(productParkingInfoVo.parkingAttribute)===""){
-			verifyProduct.parkingAttribute = true
-			result = true
-		}
-			
-		if(!productParkingInfoVo.customerId){
-			verifyProduct.customerId = true
-			result = true
-		}
-		this.setState({
-			verifyProduct,
-			parkingErrorText
-		})
-		return result
-	}
-	
 	verifyLyb = () => {
 		let result = false
-		let { companyErrorText, projectErrorText, projectMainNameErrorText, linkPhoneErrorText, verifyProduct, productCompanyInfoForm } = this.state
-		console.log(productCompanyInfoForm)
-		if(trim(productCompanyInfoForm.companyName)===""){
+		let { companyErrorText, projectErrorText, projectMainNameErrorText, linkPhoneErrorText, verifyProduct, productInfoVo } = this.state
+		console.log(productInfoVo)
+		if(trim(productInfoVo.companyName)===""){
 			verifyProduct.companyName = true
 			companyErrorText = error_empty_company
 			result = true
 		}
-		if(testSpace(productCompanyInfoForm.companyName)){
+		if(testSpace(productInfoVo.companyName)){
 			verifyProduct.companyName = true
 			companyErrorText = error_sapce_company
 			result = true
 		}
-		if(trim(productCompanyInfoForm.projectName)===""){
+		if(trim(productInfoVo.projectName)===""){
 			verifyProduct.projectName = true
 			projectErrorText = error_empty_project
 			result = true
 		}
-		if(testSpace(productCompanyInfoForm.projectName)){
+		if(testSpace(productInfoVo.projectName)){
 			verifyProduct.projectName = true
 			projectErrorText = error_sapce_project
 			result = true
 		}
-		if(trim(productCompanyInfoForm.projectMainName)===""){
+		if(trim(productInfoVo.projectMainName)===""){
 			verifyProduct.projectMainName = true
 			projectMainNameErrorText = error_empty_projectbody
 			result = true
 		}
-		if(testSpace(productCompanyInfoForm.projectMainName)){
+		if(testSpace(productInfoVo.projectMainName)){
 			verifyProduct.projectMainName = true
 			projectMainNameErrorText = error_sapce_projectbody
 			result = true
 		}
 		
-		if(trim(productCompanyInfoForm.linkPhone)===""){
+		if(trim(productInfoVo.linkPhone)===""){
 			verifyProduct.linkPhone = true
 			linkPhoneErrorText = error_empty_linkphone
 			result = true
 		}
-		if(!testPhone(productCompanyInfoForm.linkPhone)){
+		if(!testPhone(productInfoVo.linkPhone)){
 			verifyProduct.linkPhone = true
 			linkPhoneErrorText = error_sapce_linkphone
 			result = true
 		}
 		
-		if(trim(productCompanyInfoForm.location)===""){
+		if(trim(productInfoVo.location)===""){
 			verifyProduct.location = true
 			result = true
 		}
-		if(!productCompanyInfoForm.cityId.length){
+		if(!productInfoVo.cityId.length){
 			verifyProduct.cityId = true
 			result = true
 		}
@@ -370,6 +326,43 @@ export default class AuthorizationSteps extends Component{
 			projectMainNameErrorText, 
 			linkPhoneErrorText, 
 			verifyProduct
+		})
+		return result
+	}
+	
+	verifyMb = () => {
+		let result = false
+		let { parkingErrorText, verifyProduct, productInfoVo } = this.state
+		if(trim(productInfoVo.parkingName)===""){
+			verifyProduct.parkingName = true
+			parkingErrorText = error_empty
+			result = true
+		}
+		if(testSpace(productInfoVo.parkingName)){
+			verifyProduct.parkingName = true
+			parkingErrorText = error_space
+			result = true
+		}
+		if(trim(productInfoVo.parkingLocation)===""){
+			verifyProduct.parkingLocation = true
+			result = true
+		}
+		if(!productInfoVo.cityId.length){
+			verifyProduct.cityId = true
+			result = true
+		}
+		if(trim(productInfoVo.parkingAttribute)===""){
+			verifyProduct.parkingAttribute = true
+			result = true
+		}
+			
+		if(!productInfoVo.customerId){
+			verifyProduct.customerId = true
+			result = true
+		}
+		this.setState({
+			verifyProduct,
+			parkingErrorText
 		})
 		return result
 	}
@@ -503,10 +496,11 @@ export default class AuthorizationSteps extends Component{
 			totalPrice,
 			detailVoList
 		})
+		console.log(detailVoList)
 	}
 	
     render(){
-		const { productParkingInfoVo, customerList, verifyProduct, productCompanyInfoForm } = this.state
+		const { productInfoVo, customerList, verifyProduct } = this.state
 		const mbStepOne = this.state.current===0&&this.state.productId===1
 		const mbStepTwo = this.state.current===1&&this.state.productId===1
 		const lybStepOne = this.state.current===0&&this.state.productId===7
@@ -542,7 +536,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Input 
-													value={productParkingInfoVo.parkingName}
+													value={productInfoVo.parkingName}
 													onChange={this.onInputChange.bind(this, 'parkingName')}
 													type="text" 
 													placeholder="请输入"/>
@@ -558,7 +552,7 @@ export default class AuthorizationSteps extends Component{
 											<div className="input_box" id="citySelect">
 												<Cascader
 													options={options} 
-													value={productParkingInfoVo.cityId}
+													value={productInfoVo.cityId}
 													onChange={this.onCityCodeChange} 
 													placeholder="请选择" />
 											</div>
@@ -572,7 +566,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<TextArea 
-													value={productParkingInfoVo.parkingLocation}
+													value={productInfoVo.parkingLocation}
 													onChange={this.onInputChange.bind(this, 'parkingLocation')}
 													placeholder="请输入详细地址" 
 													rows={4}/>
@@ -587,7 +581,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Select
-													value={productParkingInfoVo.parkingAttribute}
+													value={productInfoVo.parkingAttribute}
 													onChange={this.onSelectChange.bind(this, 'parkingAttribute')}>
 														<Option value="商超">商超</Option>
 														<Option value="办公">办公</Option>
@@ -610,7 +604,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box" style={{ paddingRight: '100px' }}>
 												<Select
-													value={productParkingInfoVo.customerId}
+													value={productInfoVo.customerId}
 													onChange={this.onSelectChange.bind(this, 'customerId')}>
 													{
 														customerList.length>0 && customerList.map((item, index)=> {
@@ -634,7 +628,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box" style={{ paddingRight: '100px' }}>
 												<Input
-													value={productParkingInfoVo.longitudeAndLatitude}
+													value={productInfoVo.longitudeAndLatitude}
 													onChange={this.onInputChange.bind(this, 'longitudeAndLatitude')}
 													type="text" 
 													placeholder="请输入"/>
@@ -652,8 +646,8 @@ export default class AuthorizationSteps extends Component{
 											<div className="input_box">
 												<Radio.Group 
 													name="radiogroup" 
-													value={productParkingInfoVo.parkType}
-													onChange={this.onRadioChange.bind(this, 'parkType', 'productParkingInfoVo')} >
+													value={productInfoVo.parkType}
+													onChange={this.onRadioChange.bind(this, 'parkType', 'productInfoVo')} >
 												  <Radio value={0}>不含岗亭(纯云端)</Radio>
 												  <Radio value={1}>含岗亭版</Radio>
 												</Radio.Group>
@@ -682,7 +676,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Input 
-													value={productCompanyInfoForm.companyName}
+													value={productInfoVo.companyName}
 													onChange={this.onInputChange.bind(this, 'companyName')}
 													type="text" 
 													placeholder="请输入"/>
@@ -697,7 +691,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Input 
-													value={productCompanyInfoForm.projectName}
+													value={productInfoVo.projectName}
 													onChange={this.onInputChange.bind(this, 'projectName')}
 													type="text" 
 													placeholder="请输入"/>
@@ -712,7 +706,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Select
-													value={productCompanyInfoForm.projectStatus}
+													value={productInfoVo.projectStatus}
 													onChange={this.onSelectChange.bind(this, 'projectStatus')}>
 														<Option value={1}>筹备</Option>
 														<Option value={2}>立项</Option>
@@ -731,7 +725,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Input 
-													value={productCompanyInfoForm.projectMainName}
+													value={productInfoVo.projectMainName}
 													onChange={this.onInputChange.bind(this, 'projectMainName')}
 													type="text" 
 													placeholder="请输入"/>
@@ -747,7 +741,7 @@ export default class AuthorizationSteps extends Component{
 											<div className="input_box" id="citySelect">
 												<Cascader
 													options={options} 
-													value={productCompanyInfoForm.cityId}
+													value={productInfoVo.cityId}
 													onChange={this.onCityCodeChange} 
 													placeholder="请选择" />
 											</div>
@@ -761,7 +755,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<TextArea 
-													value={productCompanyInfoForm.location}
+													value={productInfoVo.location}
 													onChange={this.onInputChange.bind(this, 'location')}
 													placeholder="请输入详细地址" 
 													rows={4}/>
@@ -776,7 +770,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box">
 												<Input 
-													value={productCompanyInfoForm.linkPhone}
+													value={productInfoVo.linkPhone}
 													onChange={this.onInputChange.bind(this, 'linkPhone')}
 													type="text" 
 													placeholder="请输入"/>
@@ -903,47 +897,6 @@ export default class AuthorizationSteps extends Component{
 													)
 												})
 											}
-										</span>
-										<span></span>
-									</div>
-									<div className="setting_item flex_box flex_center">
-										<span>实付金额：</span>
-										<span>
-											<span className="large_title">{this.state.totalPrice}</span> 元
-										</span>
-										<span></span>
-									</div>
-									<div className="setting_item flex_box flex_center btn_item">
-										<span>
-											<Checkbox 
-												checked={this.state.agree}
-												onChange={this.onCheckboxChange}>已同意奥是否按时缴费条款</Checkbox>
-										</span>
-										<span className="dangerous_color">
-											{this.state.isAgree&&'您同意缴费条款,才能操作下一步'}
-										</span>
-										<span></span>
-									</div>
-									<div className="setting_item flex_box flex_center btn_item">
-										<span>
-											<Button type="primary" onClick={this.nextStep}>提交</Button>
-										</span>
-										<span></span>
-										<span></span>
-									</div>
-								</div>
-							)
-						},
-						{
-							lybStepTwo && (
-								<div className="step2_box">
-									<div className="form_item flex_box flex_center align_items_center with_border">
-										<span>首次充值时间：</span>
-										<span>
-											<InputNumber 
-												value={this.state.years}
-												onChange={this.onNumberChange.bind(this, 'years')}
-												min={1}/> 年
 										</span>
 										<span></span>
 									</div>

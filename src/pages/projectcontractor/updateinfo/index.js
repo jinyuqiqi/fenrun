@@ -4,29 +4,28 @@ import message from '@/utils/message';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateStatus, updateCurrentInfo } from '@/store/reducer/action';
-import { trim, testSpace, testPhone, testNum, testNumber, testMobile, getNowFormatDate } from '@/utils/tool'; 
-import { getRandomNum, getProductList, addContractor } from '@/http/api';
+import { trim, testSpace, testPhone, testNum, testNumber, testMobile } from '@/utils/tool'; 
+import { getRandomNum, getProductList, updateContractor } from '@/http/api';
 import './index.css';
 
 const { Option } = Select;
-const createDate = getNowFormatDate()
-function onChange(value) {
-  console.log(`selected ${value}`);
-}
+// const createDate = getNowFormatDate()
+let handling = false
 
-class FormInfo extends Component{
+class UpdateInfo extends Component{
 	constructor(props){
         super(props);
 		this.state = {
 			contractor: null,
 			value: 1,
-			createDate,
+			createDate: null,
 			pname: '',
 			disabled: false,
 			productList: null,
 			contractorsForm: {
 				number: '',
 				name : '',
+				id: null,
 				address: '',
 				linkPhone: '',
 				secretPhone: '',
@@ -42,21 +41,18 @@ class FormInfo extends Component{
 			verifyPro: [],
 			errorPro: []
 		}
-		
-		this.fetchRandomNum()
     }
 	
 	static propTypes = {
 		contractorForm: PropTypes.object.isRequired,
-		updateStatus: PropTypes.func,
-		updateCurrentInfo: PropTypes.func,
-	    // updateContractor: PropTypes.func.isRequired
+	    updateStatus: PropTypes.func.isRequired,
+		updateCurrentInfo: PropTypes.func.isRequired,
 	}
 	
 	componentWillReceiveProps(nextProps){
-		let pid = nextProps.contractorForm.id
-		if(pid!==this.state.contractorsForm.pid){
-			this.fetchRandomNum()
+		if(handling) return
+		let id = nextProps.contractorForm.id
+		if(id!==this.state.contractorsForm.id){
 			this.updateStateForm(nextProps.contractorForm)
 		}
 	}
@@ -80,56 +76,37 @@ class FormInfo extends Component{
 		})
 	}
 	
-	updateStateForm = contractorForm => {
-		const that = this
-		let live = (contractorForm&&contractorForm.live)?contractorForm.live:1
-		let disabled = live+1===3?true:false
-		let { contractorsForm } = that.state
-		contractorsForm.pid = contractorForm.id
-		that.setState({
-			disabled,
-			contractorsForm,
-			pname: contractorForm.name
-		})
-		that.fetchProductList(contractorForm.id)
-	}
-	
-	fetchRandomNum = () => {
-		let { contractorsForm } = this.state 
-		getRandomNum().then(res=> {
-			if(res.code===1){
-				contractorsForm.number = res.data
-				this.setState({
-					contractorsForm
-				})
+	updateStateForm = _contractorForm => {
+		console.log(_contractorForm)
+		handling = true
+		let { contractorsForm, productList, pname, createDate } = this.state
+		for(const key in contractorsForm){
+			if(key==='status'){
+				contractorsForm.status = _contractorForm.status===1?true:false
+			} else{
+				contractorsForm[key] = _contractorForm[key]
 			}
+		}
+		createDate = _contractorForm.createTime
+		pname = _contractorForm.pname?_contractorForm.pname:'无'
+		
+		productList = _contractorForm.goodsInfoList.map(item=> {
+			item['use'] = 1
+			item.clist.map(val=> {
+				val['errtext'] = '';
+				val['error'] = false
+				return val
+			})
+			return item
 		})
-	}
-	
-	fetchProductList = id => {
-		getProductList({id: id}).then(res=> {
-			if(res.code===1){
-				let productList = res.data.map(item=> {
-					item['use'] = 1
-					item.list.map(val=> {
-						val['price'] = '';
-						val['profit'] = '0';
-						val['errtext'] = '';
-						val['error'] = false
-						return val
-					})
-					return item
-				})
-				this.setState({
-					productList
-				})
-			}
+		this.setState({
+			pname,
+			createDate,
+			productList,
+			contractorsForm
 		})
+		handling = false
 	}
-	
-	// componentWillUnmount(){
-	// 	emitter.removeListener(this.eventEmitter)
-	// }
 	
 	onTextInputChange = (name, e) => {
 		if(name==="linkPhone"||name==="secretPhone"){
@@ -185,7 +162,7 @@ class FormInfo extends Component{
 			let { productList } = this.state
 			productList[index].use = e.target.value
 			if(e.target.value===0){
-				productList[index].list.forEach(item=> {
+				productList[index].clist.forEach(item=> {
 					item.error = false
 				})
 			}
@@ -197,17 +174,15 @@ class FormInfo extends Component{
 	
 	onPriceChange = (index, idx, e)=> {
 		e.persist()
-		console.log(this.props.contractorForm)
 		if(!testNum(e.target.value)&&e.target.value!='') return
 		if(Number(e.target.value)<=0&&e.target.value!='') return
 		
 		let { productList } = this.state
-		let profit = Number(e.target.value) - productList[index].list[idx].originalPrice
-		productList[index].list[idx].price = e.target.value
-		productList[index].list[idx].profit = e.target.value===""?0:profit
+		productList[index].clist[idx].price = e.target.value
+		productList[index].clist[idx].profit = e.target.value===""?0:e.target.value
 		
-		if(productList[index].list[idx].error){
-			productList[index].list[idx].error = false
+		if(productList[index].clist[idx].error){
+			productList[index].clist[idx].error = false
 		}
 		
 		this.setState({
@@ -219,13 +194,12 @@ class FormInfo extends Component{
 	submitEvent = ()=> {
 		if(!this.verifyParams()) return
 		let ContractorsForm = this.fetchParams()
-		addContractor(ContractorsForm).then(res=> {
+		updateContractor(ContractorsForm).then(res=> {
 			if(res.code===1){
 				message.success('成功')
-				
 				let plyload = {
 					willUpdate: true,
-					updateCurrentId: res.data
+					updateCurrentId: this.state.contractorsForm.id
 				}
 				this.props.updateCurrentInfo(plyload)
 				this.props.history.replace({pathname: "/index/projectcontractor/detailinfo"})
@@ -277,7 +251,7 @@ class FormInfo extends Component{
 		}
 		if(productList){
 			productList.forEach(item=> {
-				item.list.forEach(val=> {
+				item.clist.forEach(val=> {
 					if(isNaN(val.price)){
 						val.error = true
 						val.errtext = '请输入正确的数字金额'
@@ -304,17 +278,19 @@ class FormInfo extends Component{
 		Object.assign(ContractorsForm, contractorsForm)
 		if(productList){
 			productList.forEach(item=> {
-				if(item.use&&item.list){
+				if(item.use&&item.clist){
 					goodsInfoList.push({
-						cstatus: item.status,
-						goodsId: item.id,
+						cstatus: item.cstatus,
+						goodsId: item.goodsId,
 						group: item.group,
+						id: item.id,
 					})
-					item.list.forEach(val=> {
+					item.clist.forEach(val=> {
 						goodsInfoList.push({
-							cstatus: val.status,
-							goodsId: val.id,
+							cstatus: val.cstatus,
+							goodsId: val.goodsId,
 							group: val.group,
+							id: val.id,
 							price: val.price
 						})
 					})
@@ -525,7 +501,7 @@ class FormInfo extends Component{
 										return (
 											<div key={item.id}>
 												<div className="self_table_cell flex_box">
-													<div className="self_table_tr">是否可以授权{item.name}产品:</div>
+													<div className="self_table_tr">是否可以授权{item.goodsName}产品:</div>
 													<div className="self_table_td">
 														<Radio.Group 
 															onChange={this.onRadioChange.bind(this, 'use', index)} 
@@ -536,10 +512,10 @@ class FormInfo extends Component{
 													</div>
 												</div>
 												{
-													item.use===1&&item.list.length && item.list.map((val, idx)=> {
+													item.use===1&&item.clist.length && item.clist.map((val, idx)=> {
 														return (
 															<div className="self_table_cell flex_box" key={val.id}>
-																<div className="self_table_tr">{val.name}:</div>
+																<div className="self_table_tr">{val.goodsName}:</div>
 																<div className="self_table_td">
 																	{
 																		val.error&&(
@@ -572,4 +548,4 @@ export default connect(state => ({
  }), {
 	 updateStatus,
 	 updateCurrentInfo
- })(FormInfo);
+ })(UpdateInfo);

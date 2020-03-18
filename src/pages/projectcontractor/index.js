@@ -3,14 +3,15 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { Tree, Icon, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateStatus, updateContractorId, updateContractorList, updateContractorForm } from '@/store/reducer/action';
+import { updateStatus, updateContractorId, updateCurrentInfo, updateContractorList, updateContractorForm } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import Loadable from '@/components/loadable';
 import { getContractorTree } from '@/http/api';
 // import emitter  from '@/event';
-import './index.css';
+import './index.css'; 
 
 const FormInfo = Loadable(()=> import('@/pages/projectcontractor/forminfo'));
+const UpdateInfo = Loadable(()=> import('@/pages/projectcontractor/updateinfo'));
 const DetailInfo = Loadable(()=> import('@/pages/projectcontractor/detailinfo'));
 
 const { TreeNode } = Tree;
@@ -27,10 +28,12 @@ const getParentKey = (key, tree) => {
       } else if (getParentKey(key, node.children)) {
         parentKey = getParentKey(key, node.children);
       }
-    }else{}
+    }
   }
   return parentKey;
 };
+
+let requesting = false
 
 class ProjectContractor extends Component{
 	constructor(props){
@@ -43,7 +46,6 @@ class ProjectContractor extends Component{
 					title: '工程商管理'
 				}
 			],
-			// dataList: [],
 			expandedKeys: [],
 			searchValue: '',
 			autoExpandParent: true,
@@ -51,25 +53,24 @@ class ProjectContractor extends Component{
 			selectKeys: [],
 			selectid: 1
 		}
-		
-		// window.onbeforeunload = function(event){
-		// 	window.sessionStorage.setItem('contractorList', JSON.stringify(that.props.contractorList))
-		// }
-		
-		// let contractorList = window.sessionStorage.getItem('contractorList')
-		// if(contractorList){
-		// 	this.props.updateContractorList(JSON.parse(contractorList))
-		// }
-		this.fetchContractorList(()=> {
-			this.updateTreeData()
+		if(props.contractorList.length){
+			this.updateTreeDataInit()
 			const contractorId = this.state.treeData.length?this.state.treeData[0].id:0
 			this.props.updateContractorId(contractorId)
-		})
+		}else{
+			this.fetchContractorList(()=> {
+				this.updateTreeDataInit()
+				const contractorId = this.state.treeData.length?this.state.treeData[0].id:0
+				this.props.updateContractorId(contractorId)
+			})
+		}
     }
 	
 	static propTypes = {
 		willUpdate: PropTypes.bool,
+		updateCurrentId: PropTypes.number,
 		contractorList: PropTypes.array,
+		updateCurrentInfo: PropTypes.func,
 		updateContractorId: PropTypes.func,
 	    updateContractorList: PropTypes.func,
 		updateContractorForm: PropTypes.func,
@@ -79,10 +80,39 @@ class ProjectContractor extends Component{
 	}
 	
 	componentWillReceiveProps(nextProps){
+		if(requesting) return
 		if(nextProps.willUpdate){
+			const newProps = nextProps
 			this.fetchContractorList(()=> {
 				this.updateTreeData()
-				const contractorId = this.state.treeData.length?this.state.treeData[0].id:0
+				let contractorId = this.state.treeData.length?this.state.treeData[0].id:0
+				if(newProps.updateCurrentId){
+					contractorId = newProps.updateCurrentId
+					let plyload = {
+						willUpdate: false,
+						updateCurrentId: 0
+					}
+					this.props.updateCurrentInfo(plyload)
+					this.setState({
+						selectKeys: [String(contractorId)]
+					})
+				}else{
+					let willUpdate = false
+					this.props.updateStatus(willUpdate)
+				}
+				let expandedKeys = []
+				let parentKey1 = getParentKey(String(contractorId), this.state.treeData)
+				if(parentKey1){
+					let parentKey2 = getParentKey(parentKey1, this.state.treeData)
+					expandedKeys.push(parentKey1)
+					if(parentKey2)expandedKeys.push(parentKey2)
+				}
+				if(expandedKeys.length){
+					this.setState({
+					  expandedKeys: expandedKeys,
+					  autoExpandParent: false,
+					});
+				}
 				this.props.updateContractorId(contractorId)
 			})
 		}
@@ -93,7 +123,6 @@ class ProjectContractor extends Component{
 		this.setState({
 			height: height+'px'
 		})
-		
 	}
 	
 	updateTreeData = () => {
@@ -103,6 +132,14 @@ class ProjectContractor extends Component{
 			treeData,
 			selectKeys,
 		})
+		this.generateList(treeData)
+	}
+	
+	updateTreeDataInit = () => {
+		let treeData = this.recursionContractors(this.props.contractorList)
+		let selectKeys = treeData.length?[treeData[0].key]:[]
+		this.state.treeData = treeData
+		this.state.selectKeys = selectKeys
 		this.generateList(treeData)
 	}
 	
@@ -118,29 +155,19 @@ class ProjectContractor extends Component{
 	}
 	
 	fetchContractorList = (cb=null) => {
+		requesting = true
 		getContractorTree().then(res=> {
+			requesting = false
 			if(res.code===1){
 				let contractorList = res.data
-				let willUpdate = false
-				this.props.updateStatus(willUpdate)
+				
 				this.props.updateContractorList(contractorList)
 				if(cb)cb()
-				// if(id){
-				// 	contractorId = id
-				// }else{
-				// 	if(contractorList.length)contractorId = contractorList[0].id
-				// }
-				// this.props.updateContractorId(contractorId)
 			}
+		}).catch(err=> {
+			requesting = false
 		})
-		// let contractorList = this.props.contractorList
-		// let treeData = this.recursionContractors(contractorList)
-		// this.setState({
-		// 	treeData
-		// })
 	}
-	
-	
 	
 	recursionContractors = data => {
 		const that = this
@@ -189,7 +216,6 @@ class ProjectContractor extends Component{
 	        }
 	        return null;
 	    }).filter((item, i, self) => item !==null );
-		// console.log(expandedKeys)
 	    this.setState({
 	      expandedKeys: expandedKeys,
 	      searchValue: value,
@@ -281,7 +307,7 @@ class ProjectContractor extends Component{
 						<div className="flex_box" style={{minHeight: this.state.height}}>
 							<div className="tree_nav">
 								<div className="tree_search">
-									<Search style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange} />
+									<Search style={{ marginBottom: 8 }} placeholder="请输入" onChange={this.onChange} />
 								</div>
 								<div className="tree_content">
 									<Tree
@@ -304,6 +330,7 @@ class ProjectContractor extends Component{
 							<Switch>
 								<Route path='/index/projectcontractor/detailinfo' component={DetailInfo} />
 								<Route path='/index/projectcontractor/forminfo' component={FormInfo} />
+								<Route path='/index/projectcontractor/updateinfo' component={UpdateInfo} />
 								<Redirect to='/index/projectcontractor/detailinfo'  />
 							</Switch>
 						</div>
@@ -318,8 +345,10 @@ class ProjectContractor extends Component{
 export default connect(state => ({
 	willUpdate: state.storeState.willUpdate,
 	contractorList: state.storeState.contractorList,
+	updateCurrentId: state.storeState.updateCurrentId
  }), {
 	updateStatus,
+	updateCurrentInfo,
 	updateContractorId,
 	updateContractorList,
 	updateContractorForm

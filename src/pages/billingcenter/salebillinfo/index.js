@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import BreadCrumb from '@/components/breadcrumb';
 import ModalAuthorInfo from '@/components/modalAuthorInfo';
@@ -31,7 +30,7 @@ const columns = [
 ];
 
 
-class InAudit extends Component{
+class SaleBillInfo extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -41,11 +40,11 @@ class InAudit extends Component{
 			tableList: [],
 			breadcrumbList: [
 				{
-					title: '产品授权',
-					path: '/index/productlicensing/authorizations',
+					title: '对账中心',
+					path: '/index/billingcenter/salesbill',
 				},
 				{
-					title: '授权管理',
+					title: '销售详情',
 				}
 			],
 		}
@@ -362,4 +361,4 @@ class InAudit extends Component{
 export default connect(null,{
 		updateLoading
 	}
-)(InAudit);
+)(SaleBillInfo);

@@ -27,6 +27,27 @@ export const updateContractorForm = contractorForm => {
   }
 }
 
+export const updateCurrentInfo = plyload => {
+  return {
+    type: 'UPDATE_CURRENT',
+    plyload, 
+  }
+}
+
+export const updateLoading = loading => {
+  return {
+    type: 'UPDATE_LOADING',
+    loading, 
+  }
+}
+
+export const updateProduct = productList => {
+  return {
+    type: 'UPDATE_PRODUCT',
+    productList, 
+  }
+}
+
 export const storageState = storageStates => {
   return {
     type: 'STORAGE_STATE',

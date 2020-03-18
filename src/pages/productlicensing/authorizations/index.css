@@ -83,6 +83,7 @@
 	position: relative;
 }
 .search_item{
+	height: 40px;
 	padding: 6px 10px;
 }
 .search_item > span:first-child{

@@ -212,7 +212,7 @@ export default class Customer extends Component{
             		<div className="srcoll_box_inner">
 						<div className="inner_top_title flex_box flex_between">
 							<span className="top_btn">
-								<Button onClick={this.modalEvent.bind(this, 1)} type="primary">添加车场运营商</Button>
+								<Button onClick={this.modalEvent.bind(this, 1)} type="primary">添加客户</Button>
 							</span>
 							<div></div>
 						</div>

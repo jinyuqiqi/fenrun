@@ -1,7 +1,7 @@
 import axios from 'axios';
-import message from '@/utils/message';
-const baseUrl = 'http://192.168.0.156:8083';
-// const baseUrl = 'http://zhcl.4000750222.com/testdivided:8083';
+import message from '../utils/message';
+const baseUrl = 'http://192.168.0.183:8083/';
+// const baseUrl = 'http://zhcl.4000750222.com/testdivided';
 // const CancelToken = axios.CancelToken;
 // let cancelRequext;
 const error_arr = [1001, 1002, 1003, 1004, 1008, 2002]

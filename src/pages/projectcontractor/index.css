@@ -139,5 +139,8 @@
 .ant-tree > li:first-child{
 	padding: 0  !important;
 }
+.tree_search .ant-input-affix-wrapper .ant-input-suffix{
+	top: 50%;
+}
 
 

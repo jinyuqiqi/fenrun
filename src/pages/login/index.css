@@ -5,14 +5,15 @@
 	background: #ECF0FD;
 	background-image:url(../../image/login_back.png);
 	background-repeat:no-repeat;
-	background-size: 55.4% auto;
-	-moz-background-size: 55.4% auto;
+	background-size: 930px 624px;
+	-moz-background-size: 930px 624px;
 	background-position:1px 140px;
+	min-width: 1080px;
 }
 .login_form{
 	position: absolute;
 	width: 460px;
-	right: 160px;
+	right: 12%;
 	top: 160px;
 	text-align: right;
 }
@@ -24,20 +25,23 @@
 }
 .project_name .default_title{
 	font-weight: normal;
-	font-size: 18px;
+	font-size: 20px;
 }
 .form_items{
-	width: 320px;
+	width: 360px;
 	position: absolute;
-	top: 140px;
+	top: 150px;
 	right: 0;
 }
 .form_items .item_name{
 	padding: 5px 0;
+	font-size: 16px;
 }	
+
 .form_items .ant-input{
 	border-radius: 1px;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
+	height: 34px !important;
 }
 .form_items .ant-input:focus{
 	border-color: #2F54EB !important;
@@ -46,14 +50,21 @@
 	font-size: 13px;
 }
 .form_items .password_set{
-	margin: 20px 0;
+	margin: 40px 0;
 }
 .form_items .ant-btn.ant-btn-block{
 	width: 100%;
 	border-radius: 2px;
-	height: 34px;
+	height: 40px;
 }
 .ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix{
-	top: 40%;
+	top: 35%;
+}
+.ant-input-affix-wrapper .ant-input-password-icon{
+	font-size: 18px;
+}
+.form_items .ant-btn.ant-btn-block:hover{
+	opacity: 1 !important;
+	background-color: #2F44EB !important;
 }
 

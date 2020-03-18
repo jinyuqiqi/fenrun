@@ -20,12 +20,6 @@ export default class TopNavigationBar extends Component{
 		}
 	}
 
-	componentDidMount(){
-		console.log('mount')
-	}
-	
-	
-
     render(){
         return(
             <Header>

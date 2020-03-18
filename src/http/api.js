@@ -4,6 +4,10 @@ export const login = p => {
 	return post('/login', p)
 }
 
+export const getUsetInfo = () => {
+	return get('/getLoginInSysUser')
+}
+
 export const getHomeCount = p => {
 	return post('/index/getCountData', p)
 }
@@ -76,6 +80,40 @@ export const delContractor = p => {
 	return post('/contractors/deletedOne', p)
 }
 
+export const updateContractor = p => {
+	return post('/contractors/update', p)
+}
 
+export const getSaleOrder = p => {
+	return post('/saleOrderCheck/selectall', p)
+}
 
+export const getFlowingOrder = p => {
+	return post('/journalCapital/list', p)
+}
 
+export const getBusinessOrder = p => {
+	return post('/businessOrderInfo/selectall', p)
+}
+
+export const getBusinessAmount = () => {
+	return post('/businessOrderInfo/statistical')
+}
+
+export const getSaleInfo = p => {
+	return post('/saleOrderInfo/selectone', p)
+}
+
+export const getProductBill = p => {
+	return post('/saleOrderInfo/selectall', p)
+}
+
+export const getBaseProduct = () => {
+	return post('/contractors/getGoodsBaseList', {id: 0})
+}
+
+export const getCustomerList = p => {
+	return post('/productCustomerInfo/selectall', p)
+}
+
+export const uploadUrl = 'http://192.168.0.183:8083/file/upload'

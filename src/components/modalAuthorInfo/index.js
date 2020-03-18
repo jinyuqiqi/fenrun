@@ -60,7 +60,7 @@ export default class ModalAuthorInfo extends Component{
 				   </div>
 				   <div className="info_item flex_box flex_between align_items_center">
 						<div>
-							<span className="grey_color">请提示用户及时登录相关模块</span>
+							<span className="grey_color">请提示用户及时登录相关模块修改密码!</span>
 						</div>
 						<div>
 							<a className="a_btn" href="https://www.baidu.com" target="_blank">

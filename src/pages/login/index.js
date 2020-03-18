@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
-import { login } from '@/http/api';
+import { login, getUsetInfo } from '@/http/api';
 import { testSpace } from '@/utils/tool';
 import './index.css';
 const errorText = '请输入正确的用户名或密码'
@@ -12,6 +12,7 @@ export default class Login extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			disabled: false,
 			errorUser: false,
 			errorPass: false,
 			userName: '',
@@ -24,6 +25,9 @@ export default class Login extends Component{
 	loginEvent = () => {
 		if(!this.verifyParams()) return
 		const { userName, password } = this.state
+		this.setState({
+			disabled: true
+		})
 		login({
 		  userName,
 		  password
@@ -32,15 +36,27 @@ export default class Login extends Component{
 				window.sessionStorage.setItem('type', String(res.data.type))
 				window.sessionStorage.setItem('roleId', String(res.data.roleId))
 				window.sessionStorage.setItem('token', res.data.token)
+				message.success('成功!')
 				this.props.history.replace({pathname: '/index'})
+				this.getUserInfo()
 			}
-			if(res.code===1006){
+			if(res.code===1006){ //
 				this.setState({
+					disabled: false,
 					errorUser: true,
 					errorPass: true,
 					tipUserName: errorText,
 					tipPassword: errorText
 				})
+			}
+		})
+	}
+	
+	getUserInfo = () => {
+		getUsetInfo().then(res=> {
+			if(res.code===1){
+				let userInfo = JSON.stringify(res.data)
+				window.sessionStorage.setItem('userInfo', userInfo)
 			}
 		})
 	}
@@ -101,7 +117,7 @@ export default class Login extends Component{
 				<div className="login_form">
 					<div className="project_name">
 						<div className="default_title">BEGINEERING  BUSINESS  MANAGEMENT</div>
-						<div className="large_title">工程商管理</div>
+						<div className="large_title">工 程 商 管 理</div>
 					</div>
 					<div className="form_items">
 						<div>
@@ -145,7 +161,11 @@ export default class Login extends Component{
 							
 						</div>
 						<div>
-							<Button onClick={this.loginEvent} type="primary" block>登录</Button>
+							<Button 
+								disabled={this.state.disabled} 
+								onClick={this.loginEvent} 
+								type="primary" 
+								block>登录</Button>
 						</div>
 					</div>
 				</div>

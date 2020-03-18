@@ -268,6 +268,26 @@ textarea.ant-input{
 	color: #000000;
 	font-weight: bold;
 }
+.ant-spin-nested-loading,
+.ant-spin-nested-loading > div,
+.ant-spin-container{
+	height: 100% !important;
+}
+.ant-spin-nested-loading > div > .ant-spin{
+	max-height: 100% !important;
+}
+.ant-spin-nested-loading > div > .ant-spin{
+	background: #FFFFFF !important;
+	opacity: 0.8;
+}
+.container_wrap .ant-table-thead > tr > th{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.container_wrap .ant-table-body{
+	overflow: hidden;
+}
 /* ::-webkit-scrollbar {position: relative;z-index: 310;} */
 /* .ant-modal-close-x */
 /* .App{
