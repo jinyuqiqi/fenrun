@@ -102,8 +102,13 @@ export default class ModalCarrier extends Component{
     render(){
         return(
             <Modal
+<<<<<<< HEAD
+			  style={{ transform: 'translateY(-50%)', top: '50%'}}
+			  title={this.props.affairId?'添加客户':'添加车场'}
+=======
 			  centered
 			  title='添加车场运营商'
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			  visible={this.props.visible}
 			  onCancel={this.props.onCancel}
 			  footer={[

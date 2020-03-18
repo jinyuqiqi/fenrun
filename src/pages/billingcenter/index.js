@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Spin } from 'antd';
+<<<<<<< HEAD
+=======
 import { Base64 } from 'js-base64';
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import BreadCrumb from '@/components/breadcrumb';
@@ -21,6 +24,10 @@ class BillingCenter extends Component{
 		this.state = {
 			path: null,
 			loading: true,
+<<<<<<< HEAD
+			leftMenuList: [
+				{
+=======
 			billPageList: [],
 			leftMenuList: []
 		}
@@ -41,6 +48,7 @@ class BillingCenter extends Component{
 					key: item.menuId+100
 				})
 				leftMenuList.push({
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 					path: '/index/billingcenter/salesbill',
 					title: '销售订单',
 					key: item.menuId,
@@ -67,21 +75,31 @@ class BillingCenter extends Component{
 				leftMenuList.push({
 					path: '/index/billingcenter/flowingwater',
 					title: '资金流水',
+<<<<<<< HEAD
+				}
+			]
+		}
+		this.state.path = this.props.location.pathname
+=======
 					key: item.menuId,
 				})
 			}
 		})
 		this.state.leftMenuList = leftMenuList
 		this.state.billPageList = billPageList
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
     }
 	
 	static propTypes = {
 		loading: PropTypes.bool,
+<<<<<<< HEAD
+=======
 	}
 	
 	componentWillMount(){
 		
 		this.listenRouteChange(this.props.location.pathname)
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 	}
 	
 	componentWillReceiveProps(nextProps) {
@@ -109,6 +127,13 @@ class BillingCenter extends Component{
 				<div className="right_content">
 					<Spin spinning={this.props.loading}>
 						<Switch>
+<<<<<<< HEAD
+							<Route path='/index/billingcenter/salesbill' component={SalesBill} />
+							<Route path='/index/billingcenter/businessbill' component={BusinessBill} />
+							<Route path='/index/billingcenter/flowingwater' component={FlowingWater} />
+							<Route path='/index/billingcenter/salebillinfo' component={SaleBillInfo} />
+							<Redirect to='/index/billingcenter/salesbill'  />
+=======
 							{
 								this.state.billPageList.map(item=> {
 									return (<Route path={item.path} component={item.component} key={item.key} />)
@@ -116,6 +141,7 @@ class BillingCenter extends Component{
 							}
 							
 							<Redirect to={this.state.billPageList[0].path}  />
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 						</Switch>
 					</Spin>
 				</div>

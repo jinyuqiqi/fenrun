@@ -197,6 +197,7 @@ class FormInfo extends Component{
 	
 	onPriceChange = (index, idx, e)=> {
 		e.persist()
+		console.log(this.props.contractorForm)
 		if(!testNum(e.target.value)&&e.target.value!='') return
 		if(Number(e.target.value)<=0&&e.target.value!='') return
 		

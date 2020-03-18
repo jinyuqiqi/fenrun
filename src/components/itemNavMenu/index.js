@@ -26,7 +26,11 @@ export default class ItemNavMenu extends Component{
 						this.props.itemnavmenu.map((item, index)=> {
 							return (
 								<Menu.Item key={String(item.id)}>
+<<<<<<< HEAD
+								  {item.title}{item.num}
+=======
 								  {item.title}({item.num})
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 								</Menu.Item>
 							)
 						})

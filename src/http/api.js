@@ -87,6 +87,42 @@ export const delContractor = p => {
 export const updateContractor = p => {
 	return post('/contractors/update', p)
 }
+<<<<<<< HEAD
+
+export const getSaleOrder = p => {
+	return post('/saleOrderCheck/selectall', p)
+}
+
+export const getFlowingOrder = p => {
+	return post('/journalCapital/list', p)
+}
+
+export const getBusinessOrder = p => {
+	return post('/businessOrderInfo/selectall', p)
+}
+
+export const getBusinessAmount = () => {
+	return post('/businessOrderInfo/statistical')
+}
+
+export const getSaleInfo = p => {
+	return post('/saleOrderInfo/selectone', p)
+}
+
+export const getProductBill = p => {
+	return post('/saleOrderInfo/selectall', p)
+}
+
+export const getBaseProduct = () => {
+	return post('/contractors/getGoodsBaseList', {id: 0})
+}
+
+export const getCustomerList = p => {
+	return post('/productCustomerInfo/selectall', p)
+}
+
+export const uploadUrl = 'http://192.168.0.183:8083/file/upload'
+=======
 
 export const getSaleOrder = p => {
 	return post('/saleOrderCheck/selectall', p)
@@ -209,3 +245,4 @@ export const getUserAuthMenu = () => {
 }
 
 export const uploadUrl = 'http://zhcl.4000750222.com/testdivided/file/upload'
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76

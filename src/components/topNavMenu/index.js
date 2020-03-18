@@ -26,6 +26,8 @@ export default class TopNavigationBar extends Component{
 		userInfo =JSON.parse(userInfo) 
 		this.state.userName = userInfo.sysUserVo.accountName
 	}
+<<<<<<< HEAD
+=======
 	
 	showSetting = () => {
 		let setting  = !this.state.setting
@@ -46,6 +48,7 @@ export default class TopNavigationBar extends Component{
 		this.props.history.replace({pathname: '/index/resetpassword'})
 		
 	}
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 
     render(){
         return(

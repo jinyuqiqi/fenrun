@@ -6,8 +6,11 @@ let defaultState = {
 	willUpdate: false,
 	updateCurrentId: 0,
 	loading: false,
+<<<<<<< HEAD
+=======
 	auditContent: {},
 	authorityList: null
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 }
 
 export const storeState = (state = defaultState , action = {}) => {
@@ -51,11 +54,14 @@ export const storeState = (state = defaultState , action = {}) => {
 			...state,
 			...{ productList: action.productList }
 		}
+<<<<<<< HEAD
+=======
 	case 'GET_AUDITINFO':
 		return {
 		   ...state, 
 		   ...{auditContent: action.auditContent},
 		};
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 	case 'STORAGE_STATE':
 		state = action.storageStates
 		return {
