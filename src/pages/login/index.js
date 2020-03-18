@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { storageState } from '@/store/reducer/action';
 import { Base64 } from 'js-base64';
 import { login, getUsetInfo, getUserAuthMenu } from '@/http/api';
 import { testSpace } from '@/utils/tool';
 import './index.css';
-const errorText = '请输入正确的用户名或密码'
-const uesrSpace = '用户名不能包含空格'
-const passSpace = '密码不能包含空格'
-const passLength = '密码长度为6-18位字符'
-export default class Login extends Component{
+const errorText = '请输入正确的用户名或密码';
+const uesrSpace = '用户名不能包含空格';
+const passSpace = '密码不能包含空格';
+const passLength = '密码长度为6-18位字符';
+
+class Login extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -22,6 +26,22 @@ export default class Login extends Component{
 			tipPassword: ''
 		}
 		window.sessionStorage.clear()
+		let state = {
+			productList: [],
+			contractorList: [],
+			contractorId: 0,
+			contractorForm: {},
+			willUpdate: false,
+			updateCurrentId: 0,
+			loading: false,
+			auditContent: {},
+			authorityList: null,
+		}
+		this.props.storageState(state)
+	}
+	
+	static propTypes = {
+	    storageState: PropTypes.func.isRequired
 	}
 
 	loginEvent = () => {
@@ -53,7 +73,6 @@ export default class Login extends Component{
 								window.sessionStorage.setItem('myAuthMenu', myAuthMenu)
 								this.props.history.replace({pathname: '/index'})
 							}
-							// console.log(res)
 						})
 						
 					}
@@ -191,3 +210,7 @@ export default class Login extends Component{
         )
     }
 }
+
+export default connect(null, {
+	storageState
+})(Login);

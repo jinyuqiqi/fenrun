@@ -83,7 +83,7 @@ class FormInfo extends Component{
 	updateStateForm = contractorForm => {
 		const that = this
 		let live = (contractorForm&&contractorForm.live)?contractorForm.live:1
-		let disabled = live+1===3?true:false
+		let disabled = live<=2?true:false
 		let { contractorsForm } = that.state
 		contractorsForm.pid = contractorForm.id
 		that.setState({
@@ -371,6 +371,7 @@ class FormInfo extends Component{
 									}
 									<Input 
 										value={contractorsForm.name}
+										maxLength={15}
 										onChange={this.onTextInputChange.bind(this, 'name')}
 										placeholder="请输入" />
 								</div>

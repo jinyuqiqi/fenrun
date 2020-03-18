@@ -61,6 +61,11 @@ export const storeState = (state = defaultState , action = {}) => {
 		return {
 			...state
 		}
+	case 'CLEAR_STATE':
+		state = action.storageStates
+		return {
+			...state
+		}
     default:
         return state;
   }

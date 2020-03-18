@@ -8,7 +8,6 @@ import { updateStatus, updateContractorId, updateCurrentInfo, updateContractorLi
 import BreadCrumb from '@/components/breadcrumb';
 import Loadable from '@/components/loadable';
 import { getContractorTree } from '@/http/api';
-// import emitter  from '@/event';
 import './index.css'; 
 
 const FormInfo = Loadable(()=> import('@/pages/projectcontractor/forminfo'));
@@ -54,7 +53,17 @@ class ProjectContractor extends Component{
 			selectKeys: [],
 			selectid: 1,
 			contractorPageList: [],
-			contractorAuths: {}
+			contractorAuths: {},
+			addFirst: false,
+			userInfo: JSON.parse(Base64.decode(sessionStorage.getItem('userInfo'))),
+			myId: null,
+		}
+		
+		let userInfo = JSON.parse(Base64.decode(sessionStorage.getItem('userInfo')))
+		if(userInfo.sysUserVo.type===1||userInfo.sysUserVo.type===3){
+			this.state.addFirst = true
+		}else{
+			this.state.myId = userInfo.contractorsBasevo.id
 		}
 		
 		let { contractorAuths, contractorPageList } = this.state
@@ -199,7 +208,6 @@ class ProjectContractor extends Component{
 			requesting = false
 			if(res.code===1){
 				let contractorList = res.data
-				
 				this.props.updateContractorList(contractorList)
 				if(cb)cb()
 			}
@@ -275,6 +283,7 @@ class ProjectContractor extends Component{
 	}
 	
 	onExpand = expandedKeys => {
+		console.log(this.state.treeData)
 	    this.setState({
 	      expandedKeys: expandedKeys,
 	      autoExpandParent: false,
@@ -288,12 +297,27 @@ class ProjectContractor extends Component{
 	
 		  const title =
 		    index > -1 ? (
-		  	<span>
+		  	<span 
+				style={{ 
+					width: '290px', 
+					display: 'inline-block',
+					textOverflow: 'ellipsis',
+					overflow: 'hidden',
+					whiteSpace: 'nowrap'}}
+			>
 		  	  {beforeStr}
-		  	  <span style={{ color: '#f50' }}>{this.state.searchValue}</span>
+		  	  <span style={{ 
+					color: '#f50'}}>{this.state.searchValue}</span>
 		  	  {afterStr}
 			  {
-				this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&& ( 
+				this.state.addFirst&&this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&&item.live<=2&& ( 
+					<span className="btn_add" onClick={this.addContractor.bind(this, item)}>
+					   <Icon type="plus-circle" /> 添加
+					</span>
+				  )
+			  }
+			  {
+				!this.state.addFirst&&this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&&item.live<=2&&this.state.myId===item.id&& ( 
 					<span className="btn_add" onClick={this.addContractor.bind(this, item)}>
 					   <Icon type="plus-circle" /> 添加
 					</span>
@@ -309,14 +333,28 @@ class ProjectContractor extends Component{
 		  	</span>
 		    ) : (
 		  	<span>
-		  		{item.title}
+				<span
+					style={{
+						width: '290px', 
+						display: 'inline-block',
+						textOverflow: 'ellipsis',
+						overflow: 'hidden',
+						whiteSpace: 'nowrap'}}
+				>{item.title}</span>
 		  		{
-					item.cstatus===1&&item.delStatus===1&& ( 
+					this.state.addFirst&&this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&&item.live<=2&& ( 
 						<span className="btn_add" onClick={this.addContractor.bind(this, item)}>
 						   <Icon type="plus-circle" /> 添加
 						</span>
 					  )
-		  		}
+		  		},
+				{
+					!this.state.addFirst&&this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&&item.live<=2&&this.state.myId===item.id&& ( 
+						<span className="btn_add" onClick={this.addContractor.bind(this, item)}>
+						   <Icon type="plus-circle" /> 添加
+						</span>
+					  )
+				}
 				{
 					item.delStatus===0&& ( 
 						<span className="btn_remove">
@@ -361,7 +399,7 @@ class ProjectContractor extends Component{
 										{this.renderTreeNodes(this.state.treeData)}
 									</Tree>
 									{
-										this.state.contractorAuths.add&&(
+										this.state.contractorAuths.add&&this.state.addFirst&&(
 											<div onClick={this.addContractor.bind(this, null)} className="add_level_btn flex_box flex_center align_items_center pointer">
 												<Icon type="plus-circle" />
 												<span>添加一级工程商</span>

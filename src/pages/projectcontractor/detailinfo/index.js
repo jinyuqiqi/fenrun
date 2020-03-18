@@ -14,10 +14,16 @@ class DetailInfo extends Component{
 		
 		this.state = {
 			contractorInfo: null,
-			myAuth: {}
+			myAuth: {},
+			isSelf: false
 		}
 		
+		let userInfo = JSON.parse(Base64.decode(sessionStorage.getItem('userInfo')))
+		
 		if(props.contractorId){
+			if(parseInt(props.contractorId)===parseInt(userInfo.contractorsBasevo.id)){
+				this.state.isSelf = true
+			}
 			this.fetchContractorInfo(props.contractorId)
 		}
     }
@@ -33,6 +39,8 @@ class DetailInfo extends Component{
 		this.setState({
 			myAuth: contractorAuthInfo
 		})
+		
+		
 	}
 	
 	componentWillReceiveProps(nextProps){
@@ -105,7 +113,7 @@ class DetailInfo extends Component{
 									this.state.myAuth.update&&(<Button onClick={this.editEvent} type="primary">编辑</Button>)
 								}
 								{
-									this.state.myAuth.del&&(<Button onClick={this.removeEvent}>删除</Button>)
+									this.state.myAuth.del&&!this.state.isSelf&&(<Button onClick={this.removeEvent}>删除</Button>)
 								}
 								
 							</div>

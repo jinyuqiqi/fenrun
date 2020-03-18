@@ -23,6 +23,10 @@
 }
 .tree_nav .ant-tree li .ant-tree-node-content-wrapper{ 
 	position: relative;
+	max-width: calc(100% - 25px);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .tree_nav .ant-tree li .ant-tree-node-content-wrapper:hover .btn_add{
 	display: block;
@@ -142,5 +146,4 @@
 .tree_search .ant-input-affix-wrapper .ant-input-suffix{
 	top: 50%;
 }
-
 

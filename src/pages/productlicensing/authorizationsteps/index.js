@@ -25,7 +25,7 @@ export default class AuthorizationSteps extends Component{
 		this.state = {
 			submitInfo: null,
 			visible: false,
-			current: 1,
+			current: 0,
 			payInfo: null,
 			productId: null,
 			productName: '',
