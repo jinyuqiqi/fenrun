@@ -17,6 +17,10 @@ export default class Staff extends Component{
 			visible: false,
 			columns: [
 			  {
+					title: '登录账号',
+					dataIndex: 'accountName',
+			  },
+			  {
 				title: '名称',
 				dataIndex: 'userName',
 			  },
@@ -32,10 +36,7 @@ export default class Staff extends Component{
 				title: '创建时间',
 				dataIndex: 'createTime',
 			  },
-			  {
-				title: '登录账号',
-				dataIndex: 'accountName',
-			  },
+			  
 			  {
 				title: '操作',
 				key: 'action',
@@ -96,14 +97,15 @@ export default class Staff extends Component{
 		this.fetchAllRoles()
 	}
 	
-	deleteEvent = id => {
+	deleteEvent = uid => {
 		const that = this
 		Modal.confirm({
+			centered:true,
 			width: 360,
 			title: '温馨提示!',
 			content: '请确认是否要删除该人员?',
 			onOk() {
-			  removeStaff({id: id}).then(res=> {
+			  removeStaff({userId: uid}).then(res=> {
 			  	if(res.code===1){
 			  		message.success('成功!')
 			  		that.fetchStaff()
@@ -126,7 +128,7 @@ export default class Staff extends Component{
 				let pagination = this.state.pagination
 				let tableList = res.data.list.map(item=> {
 					item['key'] = item.userId
-					item['createTime'] = item.createTime?item.createTime.replace(/T/g, " ").replace(/\.000\+0000/g, ""):''
+					item['createTime'] = item.createTime?item.createTime.replace(/-/g, '/').replace('T', ' ').replace('.000+0000',''):''
 					return item
 				})
 				pagination.total = res.data.total

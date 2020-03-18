@@ -62,6 +62,7 @@ export default class Withdraw extends Component{
 	}
 	
 	submitEvent = verifyCode => {
+		if(!verifyCode) return
 		const that = this
 		onWithdraw({
 			withdrawalAmount: this.state.withdrawalAmount,
@@ -106,7 +107,6 @@ export default class Withdraw extends Component{
 	}
 	
 	onInputChange = e => {
-		console.log(e)
 		if(isNaN(e)&&e!=="")return
 		
 		this.setState({

@@ -3,10 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { Tree, Icon, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-<<<<<<< HEAD
-=======
 import { Base64 } from 'js-base64';
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { updateStatus, updateContractorId, updateCurrentInfo, updateContractorList, updateContractorForm } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import Loadable from '@/components/loadable';
@@ -68,9 +65,6 @@ class ProjectContractor extends Component{
 		}else{
 			this.state.myId = userInfo.contractorsBasevo.id
 		}
-<<<<<<< HEAD
-		if(props.contractorList.length){
-=======
 		
 		let { contractorAuths, contractorPageList } = this.state
 		let myAuthMenu = JSON.parse(Base64.decode(window.sessionStorage.getItem('myAuthMenu')))
@@ -108,7 +102,6 @@ class ProjectContractor extends Component{
 		this.state.contractorPageList = contractorPageList
 		
 		if(props.contractorList&&props.contractorList.length){
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			this.updateTreeDataInit()
 			const contractorId = this.state.treeData.length?this.state.treeData[0].id:0
 			this.props.updateContractorId(contractorId)
@@ -417,19 +410,12 @@ class ProjectContractor extends Component{
 								</div>
 							</div>
 							<Switch>
-<<<<<<< HEAD
-								<Route path='/index/projectcontractor/detailinfo' component={DetailInfo} />
-								<Route path='/index/projectcontractor/forminfo' component={FormInfo} />
-								<Route path='/index/projectcontractor/updateinfo' component={UpdateInfo} />
-								<Redirect to='/index/projectcontractor/detailinfo'  />
-=======
 								{
 									this.state.contractorPageList.map(item=> {
 										return (<Route path={item.path} component={item.component} key={item.key} />)
 									})
 								}
 								<Redirect to={this.state.contractorPageList[0].path}  />
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 							</Switch>
 						</div>
 					</div>

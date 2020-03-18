@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-<<<<<<< HEAD
-import { Spin } from 'antd';
-=======
 // import { Spin } from 'antd';
 import { Base64 } from 'js-base64';
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import BreadCrumb from '@/components/breadcrumb';
 import LeftNavMenu from '@/components/leftNavMenu';
 import Loadable from '@/components/loadable';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import './index.css';
 
 const Customer = Loadable(()=> import('@/pages/productlicensing/customer'));
@@ -18,14 +12,9 @@ const Authorizations = Loadable(()=> import('@/pages/productlicensing/authorizat
 const AuthorizationSteps = Loadable(()=> import('@/pages/productlicensing/authorizationsteps'));
 const AuthorizationStepsl = Loadable(()=> import('@/pages/productlicensing/authorizationstepsl'));
 const InAudit = Loadable(()=> import('@/pages/productlicensing/inaudit'));
-<<<<<<< HEAD
-// const InAudit = Loadable(()=> import('@/pages/billingcenter/salebillinfo'));
-const AuditSuccess = Loadable(()=> import('@/pages/productlicensing/auditsuccess'));
-=======
 const CustomerInfo = Loadable(()=> import('@/pages/productlicensing/customerinfo'));
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 
-class ProductLicensing extends Component{
+export default class ProductLicensing extends Component{
 	constructor(props){
         super(props);
 		this.state = {
@@ -82,12 +71,6 @@ class ProductLicensing extends Component{
 				leftMenuList.push({
 					path: '/index/productlicensing/customer',
 					title: '客户管理',
-<<<<<<< HEAD
-					key: '2',
-				}
-			]
-		}
-=======
 					key: item.menuId,
 				})
 				item.children.forEach(value=> {
@@ -115,12 +98,7 @@ class ProductLicensing extends Component{
 		window.sessionStorage.setItem('productAuths', productAuths)
 		this.state.leftMenuList = leftMenuList
 		this.state.productPageList = productPageList
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
     }
-	
-	static propTypes = {
-		loading: PropTypes.bool,
-	}
 	
 	componentWillMount(){
 		
@@ -149,18 +127,6 @@ class ProductLicensing extends Component{
 					path={this.state.path}
 					leftMenuList={this.state.leftMenuList}></LeftNavMenu>
 				<div className="right_content">
-<<<<<<< HEAD
-					<Spin spinning={this.props.loading}>
-						<Switch>
-							<Route path='/index/productlicensing/authorizations' component={Authorizations} />
-							<Route path='/index/productlicensing/customer' component={Customer} />
-							<Route path='/index/productlicensing/inaudit' component={InAudit} />
-							<Route path='/index/productlicensing/auditsuccess' component={AuditSuccess} />
-							<Route path='/index/productlicensing/authorizationsteps' component={AuthorizationSteps} />
-							<Redirect to='/index/productlicensing/authorizations'  />
-						</Switch>
-					</Spin>
-=======
 					<Switch>
 						{
 							this.state.productPageList.map(item=> {
@@ -175,17 +141,8 @@ class ProductLicensing extends Component{
 						<Route path='/index/productlicensing/authorizationstepsl' component={AuthorizationStepsl} />*/}
 						<Redirect to={this.state.productPageList[0].path} auth={{id: 'lsafkan'}}  />
 					</Switch>
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 				</div>
             </div>  
         )
     }
 }
-<<<<<<< HEAD
-
-
-export default connect(state => ({
-	loading: state.storeState.loading,
- }), null)(ProductLicensing);
-=======
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76

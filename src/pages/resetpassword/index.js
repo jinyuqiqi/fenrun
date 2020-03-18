@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Spin, Input, Button } from 'antd';
+import { Input, Button } from 'antd';
 import BreadCrumb from '@/components/breadcrumb';
-import { testNumber, testSpace, trim } from '@/utils/tool';
+import { testSpace, trim } from '@/utils/tool';
 import { updatePassWord } from '@/http/api';
 import message from '@/utils/message';
 import './index.css'
@@ -162,5 +162,3 @@ export default class ResetPassword extends Component{
         )
     }
 }
-
-

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
-<<<<<<< HEAD
-=======
 import { Base64 } from 'js-base64';
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { getContractorInfo, delContractor } from '@/http/api';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -18,11 +15,12 @@ class DetailInfo extends Component{
 		this.state = {
 			contractorInfo: null,
 			myAuth: {},
-			isSelf: false
+			isSelf: false,
+			userInfo: null,
 		}
 		
 		let userInfo = JSON.parse(Base64.decode(sessionStorage.getItem('userInfo')))
-		
+		this.state.userInfo = userInfo
 		if(props.contractorId){
 			if(parseInt(props.contractorId)===parseInt(userInfo.contractorsBasevo.id)){
 				this.state.isSelf = true
@@ -35,8 +33,6 @@ class DetailInfo extends Component{
 		contractorId: PropTypes.number,
 		updateStatus: PropTypes.func,
 		updateContractorForm: PropTypes.func,
-<<<<<<< HEAD
-=======
 	}
 	
 	componentWillMount(){
@@ -44,17 +40,24 @@ class DetailInfo extends Component{
 		this.setState({
 			myAuth: contractorAuthInfo
 		})
-<<<<<<< HEAD
-		
-		
-=======
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
->>>>>>> 2d9ff8cae4dc47d8f9155cf284f2b3d4638b4664
 	}
 	
 	componentWillReceiveProps(nextProps){
+		
 		if(requesting) return
 		let pid = nextProps.contractorId
+		if(this.state.userInfo){
+			if(parseInt(pid)===parseInt(this.state.userInfo.contractorsBasevo.id)){
+				this.setState({
+					isSelf: true
+				})
+			}else{
+				this.setState({
+					isSelf: false
+				})
+			}
+		}
+		
 		let sid = this.state.contractorInfo?this.state.contractorInfo.id:null
 		if(pid&&(String(pid)!==String(sid))){
 			this.fetchContractorInfo(pid)

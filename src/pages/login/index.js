@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
-<<<<<<< HEAD
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { storageState } from '@/store/reducer/action';
-=======
-<<<<<<< HEAD
-import { login, getUsetInfo } from '@/http/api';
-=======
->>>>>>> 2d9ff8cae4dc47d8f9155cf284f2b3d4638b4664
 import { Base64 } from 'js-base64';
 import { login, getUsetInfo, getUserAuthMenu } from '@/http/api';
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { testSpace } from '@/utils/tool';
 import './index.css';
 const errorText = '请输入正确的用户名或密码';
@@ -67,17 +60,9 @@ class Login extends Component{
 				window.sessionStorage.setItem('type', type)
 				window.sessionStorage.setItem('roleId', roleId)
 				window.sessionStorage.setItem('token', res.data.token)
-<<<<<<< HEAD
-				message.success('成功!')
-				this.props.history.replace({pathname: '/index'})
-				this.getUserInfo()
-			}
-			if(res.code===1006){ //
-=======
-				
+
 				getUsetInfo().then(res=> {
 					if(res.code===1){
-						
 						let userInfo = Base64.encode(JSON.stringify(res.data))
 						window.sessionStorage.setItem('userInfo', userInfo)
 						getUserAuthMenu().then(res=> {
@@ -91,10 +76,7 @@ class Login extends Component{
 						
 					}
 				})
-				
-				
 			}else{
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 				this.setState({
 					disabled: false,
 					errorUser: true,

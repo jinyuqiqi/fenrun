@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Loadable from '@/components/loadable';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { Layout, Breadcrumb } from 'antd';
+import { Layout } from 'antd';
  import { Base64 } from 'js-base64';
 import TopNavigationBar from '@/components/topNavMenu';
 import './index.css';
@@ -17,7 +17,6 @@ const AuditContent = Loadable(()=> import('@/pages/workbench/auditcontent'));
 const Withdraw = Loadable(()=> import('@/pages/workbench/withdraw'));
 const Record = Loadable(()=> import('@/pages/workbench/record'));
 const BankCard = Loadable(()=> import('@/pages/workbench/bankcard'));
-
 
 
 export default class Index extends Component{
@@ -132,7 +131,6 @@ export default class Index extends Component{
 	}
 	
 	listenRouteChange(pathname){
-		console.log(pathname)
 		let notTopMenu = true
 		this.state.menuList.forEach(item=> {
 			if(pathname.includes(item.path)){
@@ -190,12 +188,13 @@ export default class Index extends Component{
 						<Route path='/index/workbench/withdraw' component={Withdraw} />
 						<Route path='/index/workbench/record' component={Record} />
 						<Route path='/index/workbench/bankcard' component={BankCard} />*/}
+						<Route path='/index/resetpassword' component={ResetPassword} />
 						{
 							this.state.menuList.length&&(
 								<Redirect to={this.state.menuList[0].path}  />
 							)
 						}
-				        <Route path='/index/resetpassword' component={ResetPassword} />
+						
 				    </Switch>
 				</Content>
             </Layout>  

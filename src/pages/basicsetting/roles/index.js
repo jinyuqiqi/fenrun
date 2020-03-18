@@ -73,15 +73,11 @@ export default class Roles extends Component{
 		this.fetchRoles()
     }
 
-<<<<<<< HEAD
-	componentDidMount(){
-=======
 	componentWillMount(){
 		let baseAuthInfo = JSON.parse(Base64.decode(sessionStorage.getItem('baseAuthInfo')))
 		this.setState({
 			myAuth: baseAuthInfo
 		})
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 	}
 	
 	routePageEvent = (pathname)=> {

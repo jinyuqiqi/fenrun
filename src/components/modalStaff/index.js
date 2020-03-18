@@ -229,8 +229,10 @@ export default class ModalStaff extends Component{
 						<div className="modal_content">
 						   <div className="item_box">
 								<div>
-									<div className="item_txt flex_box flex_between">
-										<span>*人员名称:</span>
+									<div className="item_txt flex_box">
+										<span className="item_color">*</span>
+										<span>人员名称:</span>
+										
 										{
 											this.state.error_staff&&(
 												<span className="dangerous_color">{this.state.error_staff_tip}</span>
@@ -242,7 +244,7 @@ export default class ModalStaff extends Component{
 											<Input
 												value={this.state.staffName}
 												onChange={(e) => this.onInputChange('staffName', e)}
-												maxLength={12}
+												maxLength={20}
 												placeholder="请输入"/>
 										</span>
 									</div>
@@ -250,8 +252,9 @@ export default class ModalStaff extends Component{
 						   </div>
 						   <div className="item_box">
 								<div>
-									<div className="item_txt flex_box flex_between">
-										<span>*角色:</span>
+									<div className="item_txt flex_box">
+										<span className="item_color">*</span>
+										<span>角色:</span>
 										{
 											this.state.error_roleId&&(
 												<span className="dangerous_color">请选择角色</span>
@@ -277,8 +280,8 @@ export default class ModalStaff extends Component{
 						   </div>
 						   <div className="item_box">
 								<div>
-									<div className="item_txt flex_box flex_between">
-										<span>*联系方式:</span>,
+									<div className="item_txt flex_box">
+										<span>联系方式:</span>,
 										{
 											this.state.error_phone&&(
 												<span className="dangerous_color">请输入正确的联系方式</span>

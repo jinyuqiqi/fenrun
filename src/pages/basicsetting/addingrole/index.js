@@ -236,10 +236,14 @@ export default class AddingRole extends Component{
 				})
 				that.props.history.replace({pathname: '/index/basicsetting/roles'})
 			}, 1000)
-		}else{
+		}else if(res.code===2){
+			message.error(res.msg);
 			that.setState({
 				disabled: false
 			})
+		}
+		else{
+			
 		}
 	}
 	

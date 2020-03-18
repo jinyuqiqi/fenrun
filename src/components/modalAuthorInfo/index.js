@@ -95,48 +95,8 @@ export default class ModalAuthorInfo extends Component{
 							<span className="grey_color">请提示用户及时登录相关模块修改密码!</span>
 						</div>
 						<div>
-<<<<<<< HEAD
-							<div className="with_padding"><span>账号: 2345645</span></div>
-							<div className="with_padding"><span>密码: 54156465</span></div>
-						</div>
-				   </div>
-				   <div className="info_item flex_box flex_between align_items_center">
-						<div>
-							<span className="mini_title">呼叫中心</span>
-						</div>
-						<div>
-							<div className="with_padding"><span>账号: 2345645</span></div>
-							<div className="with_padding"><span>密码: 54156465</span></div>
-						</div>
-				   </div>
-				   <div className="info_item flex_box flex_between align_items_center">
-						<div>
-							<span className="mini_title">优惠券</span>
-						</div>
-						<div>
-							<div className="with_padding"><span>账号: 2345645</span></div>
-							<div className="with_padding"><span>密码: 54156465</span></div>
-						</div>
-				   </div>
-				   <div className="info_item flex_box flex_between align_items_center">
-						<div>
-							<span className="mini_title">泊涟支付-互联互通</span>
-						</div>
-						<div>
-							<div className="with_padding"><span>账号: 2345645</span></div>
-							<div className="with_padding"><span>密码: 54156465</span></div>
-						</div>
-				   </div>
-				   <div className="info_item flex_box flex_between align_items_center">
-						<div>
-							<span className="grey_color">请提示用户及时登录相关模块修改密码!</span>
-						</div>
-						<div>
-							<a className="a_btn" href="https://www.baidu.com" target="_blank">
-=======
 							
 							<a className="a_btn" href="#!" onClick={this.downLoad}>
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 								<Icon type="download" />下载授权详情
 							</a>
 						</div>

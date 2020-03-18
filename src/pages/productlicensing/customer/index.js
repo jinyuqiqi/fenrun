@@ -209,20 +209,10 @@ export default class Customer extends Component{
             	<BreadCrumb 
             		isRight={true}
             		breadcrumbs={this.state.breadcrumbList}></BreadCrumb>
-<<<<<<< HEAD
-            	<div className="srcoll_box">
-            		<div className="srcoll_box_inner">
-						<div className="inner_top_title flex_box flex_between">
-							<span className="top_btn">
-								<Button onClick={this.modalEvent.bind(this, 1)} type="primary">添加客户</Button>
-							</span>
-							<div></div>
-=======
 				{
 					this.state.loading&&(
 						<div className="srcoll_box loading_box">
 							<Spin spinning={true}></Spin>
->>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 						</div>
 					)
 				}
@@ -234,7 +224,7 @@ export default class Customer extends Component{
 									<span className="top_btn">
 										{
 											this.state.myAuth.addcustomer&&(
-												<Button onClick={this.modalEvent} type="primary">添加车场运营商</Button>
+												<Button onClick={this.modalEvent} type="primary">添加客户</Button>
 											)
 										}
 									</span>
