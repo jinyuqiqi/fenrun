@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import { InputNumber, Input, Button, Icon, Steps, Select, Cascader, Radio, Upload, Checkbox } from 'antd';
 import BreadCrumb from '@/components/breadcrumb';
+<<<<<<< HEAD
 import { getProductList, getCustomerList, uploadUrl } from '@/http/api';
 import options from '@/utils/city';
 import { trim, testSpace, testPhone } from '@/utils/tool'; 
 import './index.css';
+=======
+import ModalCarrier from '@/components/modalCarrier';
+import { getProductList, getCustomerList, uploadUrl, onAuthMb, addCustomer, getPAyAccount } from '@/http/api';
+import options from '@/utils/city';
+import { TransformToChinese, trim, testSpace, testPhone, testNumber, testLon, testLat } from '@/utils/tool'; 
+import { Base64 } from 'js-base64';
+import message from '@/utils/message';
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 const token = sessionStorage.getItem('token'); 
 const { Step } = Steps;
 const { TextArea } = Input;
@@ -14,12 +23,15 @@ let detailVo = new Map();
 
 const error_space = '车场名称不能包含空格';
 const error_empty = '车场名称不能为空';
+<<<<<<< HEAD
 const error_sapce_company = '企业名称不能包含空格';
 const error_empty_company = '企业名称不能为空';
 const error_sapce_project = '项目名称不能包含空格';
 const error_empty_project = '项目名称不能为空';
 const error_sapce_projectbody = '项目负责人不能包含空格';
 const error_empty_projectbody = '项目负责人不能为空';
+=======
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 const error_sapce_linkphone = '联系方式格式错误';
 const error_empty_linkphone = '联系方式不能为空';
 
@@ -27,10 +39,24 @@ export default class AuthorizationSteps extends Component{
 	constructor(props){
         super(props);
 		this.state = {
+<<<<<<< HEAD
 			current: 0,
 			productId: null,
 			years: 1,
 			totalPrice: 0,
+=======
+			submitInfo: null,
+			visible: false,
+			current: 1,
+			payInfo: null,
+			productId: null,
+			productName: '',
+			years: 1,
+			totalPrice: 0,
+			disabled: false,
+			tradNumber: '',
+			testTradNumber: false,
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			fileList: [],
 			breadcrumbList: [
 				{
@@ -52,13 +78,18 @@ export default class AuthorizationSteps extends Component{
 				cityId: [],
 				cityName: '',
 				customerId: null,
+<<<<<<< HEAD
 				customerName: '',
+=======
+				customerName: '', 
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 				longitudeAndLatitude: '',
 				parkType: 0,
 				parkingAttribute: '',
 				parkingLocation: '',
 				parkingName: '',
 			},
+<<<<<<< HEAD
 			productCompanyInfoForm: {
 				cityId: [],
 				cityName: '',
@@ -69,6 +100,8 @@ export default class AuthorizationSteps extends Component{
 				projectMainName: '',
 				linkPhone: ''
 			},
+=======
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			verifyProduct: {
 				parkingName: false,
 				cityId: false,
@@ -80,24 +113,55 @@ export default class AuthorizationSteps extends Component{
 				location: false,
 				linkPhone: false,
 				projectMainName: false,
+<<<<<<< HEAD
 			},
 			parkingErrorText: '',
 			companyErrorText: '',
 			projectErrorText: '',
 			projectMainNameErrorText: '',
 			linkPhoneErrorText: '',
+=======
+				longitudeAndLatitude: false,
+			},
+			parkingErrorText: '',
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			callFunc: 0,
 			callFuncValue: null,
 			callFuncPrice: null,
 			callFuncList: [],
 			couponFunc: 1,
+<<<<<<< HEAD
 			couponFuncValue: 1,
+=======
+			couponFuncValue: 5,
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			couponPrice: 0,
 			cameraFunc: 0,
 			cameraCount: 1,
 			cameraPrice: 0,
 			agree: false,
 			isAgree: false,
+<<<<<<< HEAD
+=======
+		}
+		if(props.location.state){
+			console.log(props.location.state)
+			this.state.productId = props.location.state.id
+			sessionStorage.setItem('productId', String(props.location.state.id))
+			if(props.location.state.customerId){
+				sessionStorage.setItem('acustomerId', String(props.location.state.customerId))
+				sessionStorage.setItem('acustomerName', String(props.location.state.customerName))
+				this.state.productParkingInfoVo.customerId = props.location.state.customerId
+				this.state.productParkingInfoVo.customerName = props.location.state.customerName
+			}
+			
+		}else{
+			this.state.productId = parseInt(sessionStorage.getItem('productId'))
+			if(sessionStorage.getItem('acustomerId')){
+				this.state.productParkingInfoVo.customerId = parseInt(sessionStorage.getItem('acustomerId'))
+				this.state.productParkingInfoVo.customerName = sessionStorage.getItem('acustomerName')
+			}
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		}
 		this.state.productId = props.location.state.id
     }
@@ -106,6 +170,7 @@ export default class AuthorizationSteps extends Component{
 		this.getInitData()
 	}
 	
+<<<<<<< HEAD
 	nextStep = () => {
 		let {current} = this.state
 		if(current===0){
@@ -120,9 +185,91 @@ export default class AuthorizationSteps extends Component{
 				return
 			}
 		}
+=======
+	componentWillUnmount(){
+		sessionStorage.removeItem('productId')
+		sessionStorage.removeItem('acustomerId')
+		sessionStorage.removeItem('acustomerName')
+	}
+	
+	lastStep = () => {
+		let {current} = this.state
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		this.setState(preState => ({
-			current: preState.current + 1
+			current: preState.current - 1
 		}))
+	}
+	
+	nextStep = () => {
+		let {current} = this.state
+		if(current===0){
+			let result = this.verifyStepOne()
+			if(result) return
+			
+			this.setState(preState => ({
+				current: preState.current + 1
+			}))
+		}
+		if(current===1){
+			if(!this.state.agree){
+				this.setState({
+					isAgree: true
+				})
+				return
+			}
+			
+			this.setState(preState => ({
+				current: preState.current + 1
+			}))
+		}
+		if(current===2){
+			if(trim(this.state.tradNumber)===""){
+				this.setState({
+					testTradNumber: true
+				})
+				return
+			}
+			let params = this.takeParams()
+			onAuthMb(params).then(res=> {
+				if(res.code===1){
+					let chineseNum = isNaN(res.data.tradAmount) ?'':TransformToChinese(res.data.tradAmount)
+					this.setState(preState => ({
+						chineseNum,
+						submitInfo: res.data,
+						current: preState.current + 1
+					}))
+				}
+			})
+		}
+	}
+	
+	takeParams = () => {
+		let params = {
+		  authProductId: this.state.productId,
+		  customerId: this.state.productParkingInfoVo.customerId,
+		  customerName: this.state.productParkingInfoVo.customerName,
+		  detailVoList: this.state.detailVoList,
+		  productId: this.state.productId,
+		  productName: this.state.productName,
+		  productParkingInfoVo: {
+			cityId: this.state.productParkingInfoVo.cityId.join(","),
+			cityName: this.state.productParkingInfoVo.cityName,
+			customerId: this.state.productParkingInfoVo.customerId,
+			customerName: this.state.productParkingInfoVo.customerName,
+			longitudeAndLatitude: this.state.productParkingInfoVo.longitudeAndLatitude,
+			parkType: this.state.productParkingInfoVo.parkType,
+			parkingAttribute: this.state.productParkingInfoVo.parkingAttribute,
+			parkingLocation: this.state.productParkingInfoVo.parkingLocation,
+			parkingName: this.state.productParkingInfoVo.parkingName,
+		  },
+		  tradAmount: this.state.totalPrice,
+		  tradNumber: this.state.tradNumber,
+		  years: this.state.years
+		}
+		if(this.state.fileList.length&&this.state.fileList[0].url){
+			params["tradAc"] = this.state.fileList[0].url
+		}
+		return params
 	}
 	
 	handlePreview = (e) => {
@@ -140,6 +287,7 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	handleRemove = e => {
+<<<<<<< HEAD
 		let fileList= this.state.fileList.filter(item=> item.status!=='removed')
 		this.setState({
 			fileList
@@ -170,6 +318,71 @@ export default class AuthorizationSteps extends Component{
 				productCompanyInfoForm
 			})
 		}
+=======
+		
+	}
+	
+	onCheckboxChange = e => {
+		let {isAgree} = this.state
+		this.setState({
+			isAgree: false,
+			agree: e.target.checked
+		})
+	}
+	
+	modalEvent = () => {
+		this.setState({
+			visible: true
+		})
+	}
+	
+	onCancel = () => {
+		this.setState({
+			visible: false
+		})
+	}
+	
+	onConfirm = p => {
+		const that = this
+		let { productParkingInfoVo } = this.state
+		addCustomer(p).then(res=> {
+			if(res.code===1){
+				message.success('成功！')
+				that.takeCustomer()
+				productParkingInfoVo.customerId = res.data
+				productParkingInfoVo.customerName = p.customerName
+				that.setState({
+					visible: false,
+					productParkingInfoVo
+				})
+			}
+		})
+	}
+	
+	fillTradNumber = e => {
+		e.persist()
+		if(!testNumber(e.target.value)&&e.target.value!=="") return
+		this.setState({
+			tradNumber: e.target.value
+		})
+		
+		if(this.state.testTradNumber){
+			this.setState({
+				testTradNumber: false
+			})
+		}
+	}
+	
+	onInputChange = (name, e) => {
+		e.persist()
+		let { verifyProduct, productParkingInfoVo } = this.state
+		
+		productParkingInfoVo[name] = e.target.value
+		this.setState({
+			productParkingInfoVo
+		})
+		
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		if(verifyProduct[name]){
 			verifyProduct[name] = false
 			this.setState({
@@ -179,11 +392,18 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	onCityCodeChange = (value, option) => {
+<<<<<<< HEAD
 		let { verifyProduct, productParkingInfoVo, productCompanyInfoForm } = this.state
+=======
+		console.log(value)
+		console.log(option)
+		let { verifyProduct, productParkingInfoVo } = this.state
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		let cityName = ''
 		if(option.length){
 			cityName = option[0].label+''+option[1].label+''+option[2].label
 		}
+<<<<<<< HEAD
 		if(this.state.productId === 1){
 			productParkingInfoVo.cityId = value;
 			productParkingInfoVo.cityName = cityName;
@@ -198,6 +418,14 @@ export default class AuthorizationSteps extends Component{
 				productCompanyInfoForm
 			})
 		}
+=======
+		productParkingInfoVo.cityId = value;
+		productParkingInfoVo.cityName = cityName;
+		this.setState({
+			productParkingInfoVo
+		})
+		
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		if(verifyProduct.cityId){
 			verifyProduct.cityId = false
 			this.setState({
@@ -207,6 +435,7 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	onSelectChange = (name, e, option) => {
+<<<<<<< HEAD
 		let { verifyProduct, productParkingInfoVo, productCompanyInfoForm } = this.state
 		
 		if(this.state.productId === 1){
@@ -224,6 +453,18 @@ export default class AuthorizationSteps extends Component{
 				productCompanyInfoForm
 			}) 
 		}
+=======
+		let { verifyProduct, productParkingInfoVo } = this.state
+		
+		productParkingInfoVo[name] = e
+		if(name==='customerId'){
+			productParkingInfoVo.customerName = option.props.children
+		}
+		this.setState({
+			productParkingInfoVo
+		}) 
+		
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		if(verifyProduct[name]){
 			verifyProduct[name] = false
 			this.setState({
@@ -269,11 +510,14 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	verifyStepOne = () => {
+<<<<<<< HEAD
 		if(this.state.productId===1)return this.verifyMb()
 		if(this.state.productId===7)return this.verifyLyb()
 	}
 	
 	verifyMb = () => {
+=======
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		let result = false
 		let { parkingErrorText, verifyProduct, productParkingInfoVo } = this.state
 		if(trim(productParkingInfoVo.parkingName)===""){
@@ -298,6 +542,24 @@ export default class AuthorizationSteps extends Component{
 			verifyProduct.parkingAttribute = true
 			result = true
 		}
+<<<<<<< HEAD
+=======
+		if(trim(productParkingInfoVo.longitudeAndLatitude)===""){
+			verifyProduct.longitudeAndLatitude = true
+			result = true
+		}else{
+			let arr = productParkingInfoVo.longitudeAndLatitude.split(",")
+			if(arr.length!==2){
+				verifyProduct.longitudeAndLatitude = true
+				result = true
+			}else{
+				if(!testLon(arr[0])||!testLat(arr[1])){
+					verifyProduct.longitudeAndLatitude = true
+					result = true
+				}
+			}
+		}
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			
 		if(!productParkingInfoVo.customerId){
 			verifyProduct.customerId = true
@@ -310,6 +572,7 @@ export default class AuthorizationSteps extends Component{
 		return result
 	}
 	
+<<<<<<< HEAD
 	verifyLyb = () => {
 		let result = false
 		let { companyErrorText, projectErrorText, projectMainNameErrorText, linkPhoneErrorText, verifyProduct, productCompanyInfoForm } = this.state
@@ -374,6 +637,8 @@ export default class AuthorizationSteps extends Component{
 		return result
 	}
 	
+=======
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 	handleChange = ({file, fileList}) => {
 		let list = []
 		fileList.forEach(item=> {
@@ -385,12 +650,31 @@ export default class AuthorizationSteps extends Component{
 					url: item.response.data,
 					response: item.response
 				})
+<<<<<<< HEAD
+=======
+			}else if(item.status==='done'&&item.url){
+				list.push({
+					uid: item.uid,
+					name: item.name,
+					status: 'done',
+					url: item.url,
+				})
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			}else if(item.status==='uploading'){
 				list.push({
 					uid: item.uid,
 					name: item.name,
 					status: 'uploading',
 				})
+<<<<<<< HEAD
+=======
+			}else if(item.status==='removed'){
+				list.push({
+					uid: item.uid,
+					name: item.name,
+					status: 'removed',
+				})
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			}else{
 				list.push({
 					uid: item.uid,
@@ -406,6 +690,7 @@ export default class AuthorizationSteps extends Component{
 	}
 	
 	getInitData = () => {
+<<<<<<< HEAD
 		let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 		let id = userInfo.contractorsBasevo.id
 		getProductList({id: id}).then(res=> {
@@ -426,6 +711,53 @@ export default class AuthorizationSteps extends Component{
 				
 			}
 		})
+=======
+		let userInfo = Base64.decode(sessionStorage.getItem('userInfo'));
+		userInfo = JSON.parse(userInfo);
+		
+		let id = userInfo.contractorsBasevo.id
+		getProductList({id: id}).then(res=> {
+			if(res.code===1){
+				let filter_data = res.data.filter(item=> item.id === 1)
+				if(filter_data.length){
+					let childrenProList = filter_data[0].list
+					
+					childrenProList.forEach(item=> {
+						detailVo.set(item.id, item)
+					})
+					
+					this.handleMBPro(childrenProList)
+					
+					this.setState({
+						productName: filter_data[0].name,
+						childrenProList
+					})
+					
+					this.calculateTotal()
+				}else{
+					message.error('您没有此产品授权权限')
+					this.setState({
+						disabled: true
+					})
+				}
+			}
+		})
+		this.takeCustomer()
+		this.takePayAccountInfo()
+	}
+	
+	takePayAccountInfo = () => {
+		getPAyAccount().then(res=> {
+			if(res.code===1){
+				this.setState({
+					payInfo: res.data
+				})
+			}
+		})
+	}
+	
+	takeCustomer = () => {
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		getCustomerList({pageNum: 1, pageSize: 1000}).then(res=> {
 			if(res.code===1){
 				this.setState({
@@ -467,24 +799,41 @@ export default class AuthorizationSteps extends Component{
 	
 	calculateTotal = () => {
 		let { couponFunc, couponFuncValue, couponPrice, callFunc, callFuncPrice, callFuncValue, cameraFunc, cameraPrice, cameraCount, years, detailVoList } = this.state
+<<<<<<< HEAD
 		let totalPrice = (couponPrice*couponFunc + callFuncPrice*callFunc + cameraPrice*cameraCount) * years;
+=======
+		let couponTotalPrice = couponFuncValue?couponPrice*couponFunc:0
+		let totalPrice = (couponTotalPrice + callFuncPrice*callFunc + cameraPrice*cameraCount) * years;
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 		detailVoList = []
 		if(callFunc){
 			let item = detailVo.get(callFuncValue)
 			let vo = {
 			  "count": 1,
 			  "projectId": item.id,
+<<<<<<< HEAD
 			  "productName": item.name,
+=======
+			  "projectName": item.name,
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			  "projectType": 1
 			}
 			detailVoList.push(vo)
 		}
+<<<<<<< HEAD
 		if(couponFunc){
+=======
+		if(couponFunc&&couponFuncValue){
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			let item = detailVo.get(couponFuncValue)
 			let vo = {
 			  "count": 1,
 			  "projectId": item.id,
+<<<<<<< HEAD
 			  "productName": item.name,
+=======
+			  "projectName": item.name,
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			  "projectType": 2
 			}
 			detailVoList.push(vo)
@@ -494,7 +843,11 @@ export default class AuthorizationSteps extends Component{
 			let vo = {
 			  "count": cameraCount,
 			  "projectId": item.id,
+<<<<<<< HEAD
 			  "productName": item.name,
+=======
+			  "projectName": item.name,
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			  "projectType": 3
 			}
 			detailVoList.push(vo)
@@ -504,6 +857,7 @@ export default class AuthorizationSteps extends Component{
 			detailVoList
 		})
 	}
+<<<<<<< HEAD
 	
     render(){
 		const { productParkingInfoVo, customerList, verifyProduct, productCompanyInfoForm } = this.state
@@ -511,6 +865,20 @@ export default class AuthorizationSteps extends Component{
 		const mbStepTwo = this.state.current===1&&this.state.productId===1
 		const lybStepOne = this.state.current===0&&this.state.productId===7
 		const lybStepTwo = this.state.current===1&&this.state.productId===7
+=======
+	
+	continueAuth = () => {
+		window.location.reload()
+	}
+	
+	goBack = () => {
+		this.props.history.replace({pathname: '/index/productlicensing/authorizations'})
+	}
+	
+    render(){
+		const { current, submitInfo, productParkingInfoVo, customerList, verifyProduct } = this.state
+		
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
         return(
             <div className="container_wrap">
 				<BreadCrumb 
@@ -519,6 +887,7 @@ export default class AuthorizationSteps extends Component{
 				<div className="srcoll_box">
 					<div className="srcoll_box_inner">
 						<div className="inner_top_title inner_top_title_withbom">
+<<<<<<< HEAD
 							<span className="default_title">
 								{this.state.productId===1&&'麦泊停车授权'}
 								{this.state.productId===7&&'劳易保工地实名制'}
@@ -530,12 +899,24 @@ export default class AuthorizationSteps extends Component{
 							  
 							  {this.state.productId===1&&(<Step title="填写车场基本属性"/>)}
 							  {this.state.productId===7&&(<Step title="填写项目基本属性"/>)}
+=======
+							<span className="default_title">麦泊停车授权</span>
+							<div className="grey_color">请按照系统步骤,提交产品授权必要的信息</div>
+						</div>
+						<div className="step_box">
+							<Steps current={current} size="small">
+							  <Step title="填写车场基本属性"/>
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 							  <Step title="选择配置及报价"/>
 							  <Step title="提交支付凭证"/> 
 							</Steps>
 						</div>
 						{
+<<<<<<< HEAD
 							mbStepOne && (
+=======
+							current===0 && (
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 								<div className="withdraw_box">
 									<div className="withdraw_box_item flex_box flex_center" style={{marginTop: '10px'}}>
 										<span>*车场名称:</span>
@@ -622,16 +1003,22 @@ export default class AuthorizationSteps extends Component{
 														})
 													}
 												</Select>
-												<div className="add_btn">快速添加</div>
+												<div className="add_btn" onClick={this.modalEvent}>快速添加</div>
 											</div>
 										</span>
 										<span className="dangerous_color">
 											{verifyProduct.customerId && '请选择所属客户'}
 										</span>
 									</div>
+<<<<<<< HEAD
 									<div className="withdraw_box_item flex_box flex_center">
 										<span>经纬度:</span>
 										<span>
+=======
+									<div className="withdraw_box_item flex_box flex_center" style={{paddingBottom: '25px'}}>
+										<span>*经纬度:</span>
+										<span style={{position: 'relative'}}>
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 											<div className="input_box" style={{ paddingRight: '100px' }}>
 												<Input
 													value={productParkingInfoVo.longitudeAndLatitude}
@@ -643,8 +1030,13 @@ export default class AuthorizationSteps extends Component{
 													快速拾取</a>
 												</div>
 											</div>
+											<div className="egg_lonlat">中间用逗号隔开 示例: 116.402544,39.914492</div>
 										</span>
-										<span></span>
+										<span className="dangerous_color">
+											{
+												verifyProduct.longitudeAndLatitude&&'请按示例填写经纬度'
+											}
+										</span>
 									</div>
 									<div className="withdraw_box_item flex_box flex_center">
 										<span>单选:</span>
@@ -665,8 +1057,8 @@ export default class AuthorizationSteps extends Component{
 										<span></span>
 										<span>
 											<div className="input_box button_group">
-												<Button onClick={this.nextStep} type="primary">下一步</Button>
-												<Button>取消授权</Button>
+												<Button disabled={this.state.disabled} onClick={this.nextStep} type="primary">下一步</Button>
+												<Button onClick={this.goBack}>取消授权</Button>
 											</div>
 										</span>
 										<span></span>
@@ -674,7 +1066,9 @@ export default class AuthorizationSteps extends Component{
 								</div>
 							)
 						}
+						
 						{
+<<<<<<< HEAD
 							lybStepOne && (
 								<div className="withdraw_box">
 									<div className="withdraw_box_item flex_box flex_center" style={{marginTop: '10px'}}>
@@ -801,6 +1195,9 @@ export default class AuthorizationSteps extends Component{
 						}
 						{
 							mbStepTwo && (
+=======
+							current===1 && (
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 								<div className="step2_box">
 									{
 										this.state.callFuncList.length>0&&(
@@ -921,6 +1318,7 @@ export default class AuthorizationSteps extends Component{
 										</span>
 										<span className="dangerous_color">
 											{this.state.isAgree&&'您同意缴费条款,才能操作下一步'}
+<<<<<<< HEAD
 										</span>
 										<span></span>
 									</div>
@@ -963,11 +1361,15 @@ export default class AuthorizationSteps extends Component{
 										<span className="dangerous_color">
 											{this.state.isAgree&&'您同意缴费条款,才能操作下一步'}
 										</span>
+=======
+										</span>
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 										<span></span>
 									</div>
 									<div className="setting_item flex_box flex_center btn_item">
 										<span>
 											<Button type="primary" onClick={this.nextStep}>提交</Button>
+											<Button style={{marginLeft: '15px'}} onClick={this.lastStep}>上一步</Button>
 										</span>
 										<span></span>
 										<span></span>
@@ -976,14 +1378,36 @@ export default class AuthorizationSteps extends Component{
 							)
 						}
 						{
-							this.state.current===2 && (
+							current===2 && (
 								<div className="step3_box">
 									<div className="code_box flex_box flex_between">
 										<span>
-											<img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
+											{
+												this.state.payInfo&&(
+													<img src={this.state.payInfo.qrCodeLink} alt=""/>
+												)
+											}
+											{
+												!this.state.payInfo&&(
+													<img src="" alt=""/>
+												)
+											}
 										</span>
 										<span>
+<<<<<<< HEAD
 											<span style={{display: 'block'}}>结算账户：545415415415415415</span>
+=======
+											{
+												this.state.payInfo&&(
+													<span style={{display: 'block'}}>结算账户：{this.state.payInfo.settlementAccount}</span>
+												)
+											}
+											{
+												!this.state.payInfo&&(
+													<span style={{display: 'block'}}>结算账户：''</span>
+												)
+											}
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 											<span style={{display: 'block'}}>结算金额：<strong className="large_title">{this.state.totalPrice}</strong> 元</span> 
 										</span>
 									</div>
@@ -991,9 +1415,19 @@ export default class AuthorizationSteps extends Component{
 										<span>*输入支付流水号:</span>
 										<span>
 											<div className="input_box">
-												<Input type="text" placeholder="请输入"/>
+												<Input 
+													value={this.state.tradNumber}
+													onChange={this.fillTradNumber} 
+													type="text" 
+													placeholder="请输入"/>
 											</div>
+											{
+												this.state.testTradNumber&&(
+													<span className="dangerous_color check_trad_span">请输入支付流水号</span>
+												)
+											}
 										</span>
+										
 									</div>
 									<div className="step3_box_item flex_box flex_center">
 										<span>上传支付凭证:</span>
@@ -1009,7 +1443,7 @@ export default class AuthorizationSteps extends Component{
 												  onDownload={this.handleDownload}
 												  onChange={this.handleChange}
 												>
-												  {this.state.fileList.length >= 4 ? null : (
+												  {this.state.fileList.length >= 1 ? null : (
 														<div>
 															<Icon type="plus" />
 															<div className="ant-upload-text">上传照片</div>
@@ -1025,7 +1459,7 @@ export default class AuthorizationSteps extends Component{
 										<span>
 											<div className="input_box button_group">
 												<Button type="primary" onClick={this.nextStep} style={{width: '130px'}}>提交支付凭证</Button>
-												<Button>等一等</Button>
+												<Button onClick={this.lastStep}>等一等</Button>
 											</div>
 										</span>
 									</div>
@@ -1033,44 +1467,44 @@ export default class AuthorizationSteps extends Component{
 							)
 						}
 						{
-							this.state.current===3 && (
+							submitInfo&&current===3 && (
 								<div className="withdraw_box">
 									<div className="status_icon">
 										<div><Icon type="check-circle" theme="filled" /></div>
-										<div className="large_title">操作成功</div>
+										<div className="large_title">授权申请已提交成功</div>
 										<div className="withdraw_notice">
 											<span>您已经操作成功，预计48小时内到达指定账</span>
 										</div>
 									</div>
 									<div className="withdraw_box_item flex_box flex_center withdraw_box_sitem">
+										<span>付款账户:</span>
+										<span>{submitInfo.payAccount}</span>
+										<span></span>
+									</div>
+									<div className="withdraw_box_item flex_box flex_center withdraw_box_sitem">
 										<span>收款账户:</span>
-										<span>1234 5678 9087 1243交通银行储蓄卡</span>
+										<span>{submitInfo.settlementAccount}</span>
 										<span></span>
 									</div>
 									<div className="withdraw_box_item flex_box flex_center withdraw_box_sitem">
-										<span>提现金额:</span>
-										<span>9999.00元</span>
-										<span></span>
-									</div>
-									<div className="withdraw_box_item flex_box flex_center withdraw_box_sitem">
-										<span>付款人姓名:</span>
-										<span>王三春</span>
+										<span>收款人姓名:</span>
+										<span>{submitInfo.settlementName}</span>
 										<span></span>
 									</div>
 									<div className="withdraw_box_item flex_box flex_center withdraw_box_sitem">
 										<span style={{lineHeight: '34px'}}>付款金额:</span>
 										<span>
-											<span className="large_title">5000,000,00</span>
-											<span className="grey_color">(五万元整)</span>
+											<span className="large_title">{submitInfo.tradAmount}</span>
+											<span className="grey_color">({this.state.chineseNum})</span>
 										</span>
 										<span></span>
 									</div>
 									<div className="withdraw_bottom flex_box flex_center">
 										<span>
-											<Button type="primary">继续授权</Button>
+											<Button onClick={this.continueAuth} type="primary">继续授权</Button>
 										</span>
 										<span>
-											<Button>返回</Button>
+											<Button onClick={this.goBack}>返回</Button>
 										</span>
 									</div>
 								</div>
@@ -1078,6 +1512,10 @@ export default class AuthorizationSteps extends Component{
 						}
 					</div>
 				</div>
+				<ModalCarrier
+					visible={this.state.visible}
+					onCancel={this.onCancel}
+					onConfirm={this.onConfirm}></ModalCarrier>
             </div>  
         )
     }

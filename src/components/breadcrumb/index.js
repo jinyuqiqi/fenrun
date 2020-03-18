@@ -12,11 +12,6 @@ function itemRender(route, params, routes, paths) {
 }
 
 export default class BreadCrumb extends Component{
-	constructor(props){
-        super(props);
-		console.log(props)
-    }
-
     render(){
         return(
             <div className={`bread_wrap ${this.props.isRight ? 'bread_right' : ''}`}>

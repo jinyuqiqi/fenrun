@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
+import { Base64 } from 'js-base64';
 import ModalStaff from '@/components/modalStaff';
 import BreadCrumb from '@/components/breadcrumb';
 import TableComponent from '@/components/tableComponent';
@@ -33,19 +34,27 @@ export default class Staff extends Component{
 			  },
 			  {
 				title: '登录账号',
-				dataIndex: 'account',
+				dataIndex: 'accountName',
 			  },
 			  {
 				title: '操作',
 				key: 'action',
 				render: (text, record) => (
 					<span className="span_btn_group">
-						<span 
-							className="span_btn pointer" 
-							onClick={this.modalEvent.bind(this, 0, record.userId)}>重置密码</span>
-						<span 
-							className="span_btn pointer return_color"
-							onClick={this.deleteEvent.bind(this, record.userId)}>删除</span>
+						{
+							this.state.myAuth.updatestaff&&(
+								<span
+									className="span_btn pointer" 
+									onClick={this.modalEvent.bind(this, 0, record.userId)}>重置密码</span>
+							)
+						}
+						{
+							this.state.myAuth.delstaff&&(
+								<span
+									className="span_btn pointer return_color"
+									onClick={this.deleteEvent.bind(this, record.userId)}>删除</span>
+							)
+						}
 					</span>
 				)
 			  },
@@ -72,13 +81,19 @@ export default class Staff extends Component{
 					title: '人员管理',
 				}
 			],
+			myAuth: {}
 		}
-		this.fetchStaff()
-		this.fetchAllRoles()
+		
     }
 
-	componentDidMount(){
-		console.log('mount')
+	componentWillMount(){
+		let baseAuthInfo = JSON.parse(Base64.decode(sessionStorage.getItem('baseAuthInfo')))
+		this.setState({
+			myAuth: baseAuthInfo
+		})
+		
+		this.fetchStaff()
+		this.fetchAllRoles()
 	}
 	
 	deleteEvent = id => {
@@ -181,7 +196,11 @@ export default class Staff extends Component{
             		<div className="srcoll_box_inner">
 						<div className="inner_top_title flex_box flex_between">
 							<span className="top_btn">
-								<Button onClick={this.modalEvent.bind(this, 1, null)} type="primary">添加人员</Button>
+								{
+									this.state.myAuth.addstaff&&(
+										<Button onClick={this.modalEvent.bind(this, 1, null)} type="primary">添加人员</Button>
+									)
+								}
 							</span>
 							<div></div>
 						</div>

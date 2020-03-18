@@ -277,18 +277,20 @@ class FormInfo extends Component{
 		}
 		if(productList){
 			productList.forEach(item=> {
-				item.list.forEach(val=> {
-					if(isNaN(val.price)){
-						val.error = true
-						val.errtext = '请输入正确的数字金额'
-						result = false
-					}
-					if(trim(val.price)===""){
-						val.error = true
-						val.errtext = '请输入'
-						result = false
-					}	
-				})
+				if(item.use){
+					item.list.forEach(val=> {
+						if(isNaN(val.price)){
+							val.error = true
+							val.errtext = '请输入正确的数字金额'
+							result = false
+						}
+						if(trim(val.price)===""){
+							val.error = true
+							val.errtext = '请输入'
+							result = false
+						}	
+					})
+				}
 			})
 			this.setState({
 				productList

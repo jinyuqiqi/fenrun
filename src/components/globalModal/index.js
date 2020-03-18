@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal, Button } from 'antd';
 import TurnDown from'@/components/turnDown';
 import RemitEntry from'@/components/remitEntry';
-import WithdrawMessage from'@/components/withdrawMessage';
 import './index.css';
 
 export default class GlobalModal extends Component{
@@ -13,7 +12,7 @@ export default class GlobalModal extends Component{
     render(){
         return(
             <Modal
-			  style={{top: '50%', transform: 'translateY(-50%)'}}
+			  centered
 			  title={this.props.title}
 			  visible={this.props.visible}
 			  onOk={this.props.hideModal}
@@ -35,11 +34,6 @@ export default class GlobalModal extends Component{
 			  {
 				  this.props.dialog==='remit'&& (
 					<RemitEntry></RemitEntry>
-				  )
-			  }
-			  {
-				  this.props.dialog==='withdraw'&& (
-					<WithdrawMessage></WithdrawMessage>
 				  )
 			  }
 			</Modal>  

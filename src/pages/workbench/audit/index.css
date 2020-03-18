@@ -1,0 +1,10 @@
+.loading_box .ant-spin-spinning{
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: block;
+}
+.loading_box .ant-spin-dot{
+	font-size: 26px;
+}

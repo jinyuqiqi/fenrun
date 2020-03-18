@@ -3,6 +3,10 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { Tree, Icon, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+<<<<<<< HEAD
+=======
+import { Base64 } from 'js-base64';
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { updateStatus, updateContractorId, updateCurrentInfo, updateContractorList, updateContractorForm } from '@/store/reducer/action';
 import BreadCrumb from '@/components/breadcrumb';
 import Loadable from '@/components/loadable';
@@ -51,9 +55,51 @@ class ProjectContractor extends Component{
 			autoExpandParent: true,
 			treeData: [],
 			selectKeys: [],
-			selectid: 1
+			selectid: 1,
+			contractorPageList: [],
+			contractorAuths: {}
 		}
+<<<<<<< HEAD
 		if(props.contractorList.length){
+=======
+		
+		let { contractorAuths, contractorPageList } = this.state
+		let myAuthMenu = JSON.parse(Base64.decode(window.sessionStorage.getItem('myAuthMenu')))
+		let contractorAuth = myAuthMenu.filter(item => item.menuId === 4)
+		let contractorAuthList = contractorAuth[0].children[0].children
+		contractorPageList.push({
+			path: '/index/projectcontractor/detailinfo',
+			component: DetailInfo,
+			key: contractorAuthList[0].menuId
+		})
+		contractorAuthList.forEach(item=> {
+			if(item.menuId===24){
+				contractorPageList.push({
+					path: '/index/projectcontractor/forminfo',
+					component: FormInfo,
+					key: item.menuId
+				})
+				contractorAuths["add"] = true
+			}
+			if(item.menuId===25){
+				contractorPageList.push({
+					path: '/index/projectcontractor/updateinfo',
+					component: UpdateInfo,
+					key: item.menuId
+				})
+				contractorAuths["update"] = true
+			}
+			if(item.menuId===26){
+				contractorAuths["del"] = true
+			}
+		})
+		let contractorAuthInfo = Base64.encode(JSON.stringify(contractorAuths))
+		window.sessionStorage.setItem('contractorAuthInfo', contractorAuthInfo)
+		this.state.contractorAuths = contractorAuths
+		this.state.contractorPageList = contractorPageList
+		
+		if(props.contractorList&&props.contractorList.length){
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 			this.updateTreeDataInit()
 			const contractorId = this.state.treeData.length?this.state.treeData[0].id:0
 			this.props.updateContractorId(contractorId)
@@ -254,7 +300,7 @@ class ProjectContractor extends Component{
 		  	  <span style={{ color: '#f50' }}>{this.state.searchValue}</span>
 		  	  {afterStr}
 			  {
-				item.cstatus===1&&item.delStatus===1&& ( 
+				this.state.contractorAuths.add&&item.cstatus===1&&item.delStatus===1&& ( 
 					<span className="btn_add" onClick={this.addContractor.bind(this, item)}>
 					   <Icon type="plus-circle" /> 添加
 					</span>
@@ -321,17 +367,31 @@ class ProjectContractor extends Component{
 									>
 										{this.renderTreeNodes(this.state.treeData)}
 									</Tree>
-									<div onClick={this.addContractor.bind(this, null)} className="add_level_btn flex_box flex_center align_items_center pointer">
-										<Icon type="plus-circle" />
-										<span>添加一级工程商</span>
-									</div>
+									{
+										this.state.contractorAuths.add&&(
+											<div onClick={this.addContractor.bind(this, null)} className="add_level_btn flex_box flex_center align_items_center pointer">
+												<Icon type="plus-circle" />
+												<span>添加一级工程商</span>
+											</div>
+										)
+									}
+									
 								</div>
 							</div>
 							<Switch>
+<<<<<<< HEAD
 								<Route path='/index/projectcontractor/detailinfo' component={DetailInfo} />
 								<Route path='/index/projectcontractor/forminfo' component={FormInfo} />
 								<Route path='/index/projectcontractor/updateinfo' component={UpdateInfo} />
 								<Redirect to='/index/projectcontractor/detailinfo'  />
+=======
+								{
+									this.state.contractorPageList.map(item=> {
+										return (<Route path={item.path} component={item.component} key={item.key} />)
+									})
+								}
+								<Redirect to={this.state.contractorPageList[0].path}  />
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 							</Switch>
 						</div>
 					</div>

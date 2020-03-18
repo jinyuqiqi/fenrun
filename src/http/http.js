@@ -1,7 +1,12 @@
 import axios from 'axios';
 import message from '../utils/message';
+<<<<<<< HEAD
 const baseUrl = 'http://192.168.0.183:8083/';
 // const baseUrl = 'http://zhcl.4000750222.com/testdivided';
+=======
+const baseUrl = 'http://192.168.0.183:8083'; 
+// const baseUrl = 'http://zhcl.4000750222.com/testdivided'; 
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 // const CancelToken = axios.CancelToken;
 // let cancelRequext;
 const error_arr = [1001, 1002, 1003, 1004, 1008, 2002]
@@ -23,7 +28,7 @@ axios.interceptors.request.use(
 	
 	const token = sessionStorage.getItem('token'); 
 	if(!token||token===""){
-		window.location.href ='/login'
+		window.location.href = window.location.origin+"/#/login"
 	}
 	config.headers.token = token
     return config
@@ -37,15 +42,18 @@ axios.interceptors.response.use(
   response => {
 	if(response.data.code===2){
 	  	message.error('未知错误')
-	}
-	if(error_arr.includes(response.data.code)){
+	}else if(error_arr.includes(response.data.code)){
 		message.error(response.data.msg)
-	}
-	if(login_arr.includes(response.data.code)){
+	}else if(login_arr.includes(response.data.code)){
 		message.error('登录错误!请重新登录')	
+		if(window.location.href.includes('/login')) return response
 		setTimeout(()=> {
-			window.location.href = '/login'
+			window.location.href = window.location.origin+"/#/login"
 		}, 1500)
+	}else if(response.data.code===1){
+		
+	}else{
+		message.error(response.data.msg)
 	}
     return response;
   },
@@ -65,7 +73,14 @@ export function get(url, params={}){
             params: params        
         })        
         .then(res => { 
-            resolve(res.data);        
+            if(res.data){
+            	resolve(res.data);
+            }else{
+			  resolve({
+				  code: 2,
+				  msg: ''
+			  })
+            }        
         })        
         .catch(err => { 
             reject(err)        
@@ -77,7 +92,15 @@ export function post(url, data = {}){
    return new Promise((resolve,reject) => {
      axios.post(baseUrl+url, data)
           .then(response => {
-            resolve(response.data);
+			  if(response.data){
+				  resolve(response.data);
+			  }else{
+				  resolve({
+					  code: 2,
+					  msg: ''
+				  })
+			  }
+            
           },err => {
             reject(err)
           })

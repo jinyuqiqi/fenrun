@@ -14,13 +14,13 @@
 	width: 100%;
 	padding: 10px 0;
 }
-.audit_module_pay .audit_info_item{ 
-	padding: 8px 0;
-}
-.audit_info_item span.base_span{
+.audit_info_item > span.base_span{
 	width: 90px;
 	text-align: right;
-	padding-right: 8px;
+	padding-right: 7px;
+}
+.audit_module_pay .audit_info_item{ 
+	padding: 8px 0;
 }
 .audit_inner .ant-table-thead > tr > th{
 	font-weight: bold;
@@ -102,5 +102,48 @@
 	width: 240px;
 	margin-left: 0;
 }
+.audit_inner_module_content{
+	padding: 0 20px 8px;
+	background: #FFFFFF;
+	margin-top: 1px;
+}
+.audit_inner_module_content .ant-table-thead{
+	background: #FAFAFA;
+	
+}
+.audit_inner_module_content .ant-table-thead > tr > th{
+	padding-top: 12px;
+	padding-bottom: 12px;
+	font-weight: bold;
+}
 
+.audit_inner_module_content .ant-table-tbody > tr > td{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 13px;
+	max-width: 400px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn{
+	color: #2F54EB;
+	display: inline-block;
+	margin-left: 20px;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn.return_color{
+	color: #E02020;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn.pass_color{
+	color: #41D400;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn.default_color{
+	color: #666666;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn:first-child{
+	margin-left: 0;
+}
+.audit_inner_module_content .ant-table-tbody .span_btn_group .span_btn:hover{
+	opacity: 0.8;
+}
 

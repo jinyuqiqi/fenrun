@@ -15,8 +15,8 @@
 	padding-left: 20px;
 }
 .inner_top_title{
-	height: 44px;
-	line-height: 44px;
+	height: 48px;
+	line-height: 48px;
 	border-bottom: 1px solid rgba(242,242,242,1);
 	padding: 0 18px;
 }
@@ -53,4 +53,18 @@
 }
 .withdraw_box .withdraw_bottom > span:first-child{
 	margin-right: 10px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+.ant-input-number-handler-wrap{
+    display:none !important;
+}
+.tips_b{
+	position: absolute;
+	left: 340px;
+	top: 50%;
+	transform: translateY(-50%);
 }

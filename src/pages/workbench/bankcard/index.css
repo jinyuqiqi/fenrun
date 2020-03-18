@@ -1,3 +1,14 @@
+.srcoll_box{
+	width: 100%;
+	min-height: 100%;
+	background: #FFFFFF;
+	border-radius: 4px;
+}
+.srcoll_box .srcoll_box_inner{
+	width: 100%;
+	min-height: 100%;
+	border-radius: 5px;
+}
 .bank_card_box{
 	height: auto;
 	background: #FFFFFF;
@@ -8,10 +19,11 @@
 	height: 0;
 	padding-bottom: 15px;
 	display: block;
+	
 }
 .inner_top_title{
-	height: 44px;
-	line-height: 44px;
+	height: 48px;
+	line-height: 48px;
 	border-bottom: 1px solid rgba(242,242,242,1);
 	padding: 0 18px;
 }
@@ -22,14 +34,20 @@
 .bank_card_form_item{
 	width: 90%;
 	padding: 8px 0;
+	position: relative;
 }
 .bank_card_form_item > span:first-child{
 	width: 40%;
 	text-align: right;
 }
-.bank_card_form_item > span:last-child{
+.bank_card_form_item > span:nth-child(2){
 	width: 55%;
 	padding-left: 20px;
+}
+.bank_card_form_item > span.dangerous_color{
+	position: absolute;
+	right: 0;
+	top: 3px;
 }
 .bank_card_form_item .ant-radio-group .ant-radio-wrapper:last-child{
 	margin-left: 50px;

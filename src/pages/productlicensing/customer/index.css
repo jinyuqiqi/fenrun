@@ -1,9 +1,19 @@
 .inner_top_title{
-	height: 44px;
-	line-height: 44px;
+	height: 48px;
+	line-height: 48px;
 	border-bottom: 1px solid rgba(242,242,242,1);
 	padding: 0 18px;
 }
 .inner_top_title .top_btn button{
 	width: 140px;
+}
+.loading_box .ant-spin-spinning{
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: block;
+}
+.loading_box .ant-spin-dot{
+	font-size: 26px;
 }

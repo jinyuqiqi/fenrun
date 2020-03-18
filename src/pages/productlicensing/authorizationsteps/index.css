@@ -8,8 +8,8 @@
 	margin: 15px auto;
 }
 .inner_top_title{
-	height: 44px;
-	line-height: 44px;
+	height: 48px;
+	line-height: 48px;
 	border-bottom: 1px solid rgba(242,242,242,1);
 	padding: 0 18px;
 }
@@ -228,6 +228,7 @@
 .step3_box .code_box{
 	padding: 10px 0;
 	line-height: 28px;
+	position: relative;
 }
 .code_box{
 	border-bottom: 1px solid rgba(242,242,242,1);
@@ -245,4 +246,19 @@
 .step3_box .step3_box_item > span:last-child{
 	width: 400px;
 	padding-left: 10px;
+	position: relative;
+}
+.check_trad_span{
+	width: auto;
+	position: absolute;
+	top: 50%;
+	left: 420px;
+	transform: translateY(-50%);
+}
+.withdraw_box_item .egg_lonlat{
+	position: absolute;
+	left: 0;
+	bottom: -20px;
+	color: #999999 !important;
+	font-size: 12px !important;
 }

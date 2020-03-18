@@ -1,7 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Button, Input, Radio } from 'antd';
 import message from '@/utils/message';
+<<<<<<< HEAD
 import { login, getUsetInfo } from '@/http/api';
+=======
+import { Base64 } from 'js-base64';
+import { login, getUsetInfo, getUserAuthMenu } from '@/http/api';
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { testSpace } from '@/utils/tool';
 import './index.css';
 const errorText = '请输入正确的用户名或密码'
@@ -20,6 +25,7 @@ export default class Login extends Component{
 			tipUserName: '',
 			tipPassword: ''
 		}
+		window.sessionStorage.clear()
 	}
 
 	loginEvent = () => {
@@ -33,14 +39,40 @@ export default class Login extends Component{
 		  password
 		}).then(res=> {
 			if(res.code===1){
-				window.sessionStorage.setItem('type', String(res.data.type))
-				window.sessionStorage.setItem('roleId', String(res.data.roleId))
+				let type = Base64.encode(String(res.data.type))
+				let roleId = Base64.encode(String(res.data.roleId))
+				window.sessionStorage.setItem('type', type)
+				window.sessionStorage.setItem('roleId', roleId)
 				window.sessionStorage.setItem('token', res.data.token)
+<<<<<<< HEAD
 				message.success('成功!')
 				this.props.history.replace({pathname: '/index'})
 				this.getUserInfo()
 			}
 			if(res.code===1006){ //
+=======
+				
+				getUsetInfo().then(res=> {
+					if(res.code===1){
+						
+						let userInfo = Base64.encode(JSON.stringify(res.data))
+						window.sessionStorage.setItem('userInfo', userInfo)
+						getUserAuthMenu().then(res=> {
+							if(res.code===1){
+								message.success('成功!')
+								let myAuthMenu = Base64.encode(JSON.stringify(res.data))
+								window.sessionStorage.setItem('myAuthMenu', myAuthMenu)
+								this.props.history.replace({pathname: '/index'})
+							}
+							// console.log(res)
+						})
+						
+					}
+				})
+				
+				
+			}else{
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 				this.setState({
 					disabled: false,
 					errorUser: true,
@@ -49,6 +81,13 @@ export default class Login extends Component{
 					tipPassword: errorText
 				})
 			}
+			// if(res.code===1006){
+				
+			// }
+		}).catch(err=> {
+			this.setState({
+				disabled: false
+			})
 		})
 	}
 	

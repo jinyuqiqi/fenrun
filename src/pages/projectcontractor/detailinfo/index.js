@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
+<<<<<<< HEAD
+=======
+import { Base64 } from 'js-base64';
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 import { getContractorInfo, delContractor } from '@/http/api';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -12,7 +16,8 @@ class DetailInfo extends Component{
         super(props);
 		
 		this.state = {
-			contractorInfo: null
+			contractorInfo: null,
+			myAuth: {}
 		}
 		
 		if(props.contractorId){
@@ -24,6 +29,16 @@ class DetailInfo extends Component{
 		contractorId: PropTypes.number,
 		updateStatus: PropTypes.func,
 		updateContractorForm: PropTypes.func,
+<<<<<<< HEAD
+=======
+	}
+	
+	componentWillMount(){
+		let contractorAuthInfo = JSON.parse(Base64.decode(sessionStorage.getItem('contractorAuthInfo')))
+		this.setState({
+			myAuth: contractorAuthInfo
+		})
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 	}
 	
 	componentWillReceiveProps(nextProps){
@@ -35,10 +50,6 @@ class DetailInfo extends Component{
 		}
 	}
 
-	componentDidMount(){
-		const that = this
-		
-	}
 	
 	removeEvent = () => {
 		const that = this
@@ -96,8 +107,13 @@ class DetailInfo extends Component{
 					{
 						contractorInfo&&contractorInfo.delStatus===1&& (
 							<div className="inner_top_title_btns">
-								<Button onClick={this.editEvent} type="primary">编辑</Button>
-								<Button onClick={this.removeEvent}>删除</Button>
+								{
+									this.state.myAuth.update&&(<Button onClick={this.editEvent} type="primary">编辑</Button>)
+								}
+								{
+									this.state.myAuth.del&&(<Button onClick={this.removeEvent}>删除</Button>)
+								}
+								
 							</div>
 						)
 					}

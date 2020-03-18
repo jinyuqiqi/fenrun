@@ -1,141 +1,14 @@
 import React, { Component } from 'react';
+import { Spin, Modal } from 'antd';
+import { Base64 } from 'js-base64';
 import BreadCrumb from '@/components/breadcrumb';
-import GlobalModal from '@/components/globalModal';
+import ModalReject from '@/components/modalReject';
+import ModalRemit from '@/components/modalRemit';
 import ItemNavMenu from '@/components/itemNavMenu';
 import TableComponent from '@/components/tableComponent';
-// import './index.css';
-
-const data = [
-  {
-    key: '1',
-    name: '桃田',
-    age: 32,
-    address: '纽约大姐34号',
-  },
-  {
-    key: '2',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '5',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '7',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '8',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '10',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '11',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '12',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '13',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '14',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '15',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '16',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '17',
-    name: '林水镜',
-    age: 42,
-    address: '文一西路水上公园',
-  },
-  {
-    key: '18',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '19',
-    name: 'Disabled User',
-    age: 99,
-    address: 'Sidney No. 1 Lake Park',
-  },
-];
-
-const pagination = {
-	size: 'small',
-	showSizeChanger: true,
-	showQuickJumper: true,
-	total: 200,
-	defaultCurrent: 1,
-	showTotal: total => `共 ${total} 条`,
-	onShowSizeChange: onShowSizeChange
-	
-}
-
-function onShowSizeChange(current, pageSize) {
-  console.log(current, pageSize);
-}
+import { getWithdrawList, getAuthList, getWithdrawListLog, getTableListCount, onAuditForm } from '@/http/api';
+import message from '@/utils/message';
+import './index.css'
 
 export default class Audit extends Component{
 	constructor(props){
@@ -143,7 +16,11 @@ export default class Audit extends Component{
 		this.state = {
 			title: '',
 			dialog: '',
+			myAuth: {},
 			visible: false,
+			visible1: false,
+			loading: false,
+			tableItem: null,
 			breadcrumbList: [
 				{
 					path: '/index/workbench',
@@ -156,125 +33,576 @@ export default class Audit extends Component{
 			itemnavmenu: [
 				{
 					title: '授权审核',
-					num: 44,
-					id: '1',
+					num: 0,
+					id: 1,
 				},{
 					title: '提现审核',
-					num: 25,
-					id: '2',
+					num: 0,
+					id: 3,
 				},{
-					title: '审核记录',
-					num: 15,
-					id: '3',
+					title: '授权审核记录',
+					num: 0,
+					id: 2,
+				},{
+					title: '提现审核记录',
+					num: 0,
+					id: 4,
 				}
 			],
-			currentnavmenu: '1',
+			currentnavmenu: 1,
 			columns: [
 			  {
-				title: '销售单号',
-				dataIndex: 'name',
+				title: '交易单号',
+				dataIndex: 'transactionNumber',
 			  },
 			  {
-				title: '产品', 
-				dataIndex: 'age',
+				title: '提现金额', 
+				dataIndex: 'withdrawalAmount',
 			  },
 			  {
-				title: '客户名称',
-				dataIndex: 'address',
+				title: '工程商名称名称',
+				dataIndex: 'contractorsName',
+			  },
+			  {
+				title: '客户联系方式',
+				dataIndex: 'linkPhone',
+			  },
+			  {
+				title: '银行卡号',
+				dataIndex: 'cardNumber',
+			  },
+			  {
+				title: '开户行',
+				dataIndex: 'openBank',
+			  },
+			  {
+				title: '转账类型',
+				dataIndex: 'bankTypeText',
 			  },
 			  {
 				  title: '操作',
 				  key: 'action',
 				  render: (text, record) => {
-					let node = null
-					if(this.state.currentnavmenu==='1'){
-						node = (
-							<span className="span_btn_group">
-								<span className="span_btn pointer" onClick={this.routeAuditContent}>详情</span>
-								<span className="span_btn pointer">审核通过</span>
-							</span>
-						)
-					}
-					if(this.state.currentnavmenu==='2'){ 
-						node = (
-							<span className="span_btn_group">
-								<span className="span_btn pointer return_color" onClick={this.trunDownEvent}>驳回</span>
-								<span className="span_btn pointer" onClick={this.remitEvent}>打款</span>
-							</span>
-						)
-					}
-					if(this.state.currentnavmenu==='3'){
-						node = (
-							<span className="span_btn_group">
-								<span className="span_btn return_color">驳回</span>
-								<span className="span_btn pass_color">通过</span>
-							</span>
-						)
-					}
-					return node
-				  },
+					return (
+						<span className="span_btn_group">
+							{
+								this.state.myAuth.audit&&this.state.myAuth.audit.operate&&(
+									<span>
+										<span
+											className="span_btn pointer return_color" 
+											onClick={this.onReject.bind(this, record)}>驳回</span>
+										<span 
+											className="span_btn pointer" 
+											onClick={this.remitEvent.bind(this, record)}>打款</span>
+									</span>
+								)
+							}
+						</span>
+					)
+				  }
+			  },
+			],
+			columns_a: [
+				{
+					title: '交易单号',
+					dataIndex: 'saleOrderSn',
 				},
-			]
+				{
+					title: '产品', 
+					dataIndex: 'productName',
+				},
+				{
+					title: '客户名称',
+					dataIndex: 'customerName',
+				},
+				{
+					title: '客户联系方式',
+					dataIndex: 'linkPhone',
+				},
+				{
+					title: '授权工程商',
+					dataIndex: 'contractorName',
+				},
+				{
+					title: '提交时间',
+					dataIndex: 'createTime',
+				},
+				{
+					title: '类型',
+					dataIndex: 'tradTypeText',
+				},
+				{
+					title: '交易金额',
+					dataIndex: 'tradAmount',
+				},
+				{
+				  title: '操作',
+				  key: 'action',
+				  render: (text, record) => {
+					 return (
+						<span className="span_btn_group">
+							<span 
+								className="span_btn pointer" 
+								onClick={this.routeAuditContent.bind(this, record.saleOrderId, record.productId)}>详情</span>
+							{
+								this.state.myAuth.audit&&this.state.myAuth.audit.operate&&(
+									<span
+										className="span_btn pointer" 
+										onClick={this.auditPass.bind(this, record)}>审核通过</span>
+								)
+							}
+						</span>
+				    )
+				  }
+				},
+			],
+			columns_l: [
+				{
+					title: '交易单号',
+					dataIndex: 'saleOrderSn',
+				},
+				{
+					title: '产品', 
+					dataIndex: 'productName',
+				},
+				{
+					title: '客户名称',
+					dataIndex: 'customerName',
+				},
+				{
+					title: '客户联系方式',
+					dataIndex: 'linkPhone',
+				},
+				{
+					title: '授权工程商',
+					dataIndex: 'contractorName',
+				},
+				{
+					title: '提交时间',
+					dataIndex: 'createTime',
+				},
+				{
+					title: '类型',
+					dataIndex: 'tradTypeText',
+				},
+				{
+					title: '交易金额',
+					dataIndex: 'tradAmount',
+				},
+				{
+					title: '审核时间',
+					dataIndex: 'reviewTime',
+				},
+				{
+					title: '状态',
+					dataIndex: 'auditState',
+					render: (text, record) => {
+					    return (
+							<span className="span_btn_group">
+								{
+									record.auditState===1&& <span className="span_btn pointer default_color">审核中</span>
+								}
+								{
+									record.auditState===2&& <span className="span_btn pointer pass_color">通过</span>
+								}
+								{
+									record.auditState===3&& <span className="span_btn pointer return_color">驳回</span>
+								}
+								{
+									record.auditState===4&& <span className="span_btn pointer default_color">过期</span>
+								}
+							</span>
+						)
+					}
+				}
+			],
+			columns_w: [
+				{
+					title: '交易单号',
+					dataIndex: 'transactionNumber',
+				},
+				{
+					title: '提现金额', 
+					dataIndex: 'withdrawalAmount',
+				},
+				{
+					title: '工程商名称名称',
+					dataIndex: 'contractorsName',
+				},
+				{
+					title: '客户联系方式',
+					dataIndex: 'linkPhone',
+				},
+				{
+					title: '银行卡号',
+					dataIndex: 'cardNumber',
+				},
+				{
+					title: '开户行',
+					dataIndex: 'openBank',
+				},
+				{
+					title: '转账类型',
+					dataIndex: 'bankTypeText',
+				},
+				{
+					title: '审核时间',
+					dataIndex: 'createTime',
+				},
+				{
+					title: '打款金额',
+					dataIndex: 'actualAmount',
+				},
+				{
+					title: '打款流水号',
+					dataIndex: 'serialNumber',
+				},
+				{
+					title: '状态',
+					dataIndex: 'statusText',
+					render: (text, record) => {
+					    return (
+							<span className="span_btn_group">
+								{
+									record.status===1&& <span className="span_btn pointer default_color">审核中</span>
+								}
+								{
+									record.status===2&& <span className="span_btn pointer pass_color">通过</span>
+								}
+								{
+									record.status===3&& <span className="span_btn pointer return_color">驳回</span>
+								}
+								{
+									record.status===4&& <span className="span_btn pointer default_color">过期</span>
+								}
+							</span>
+						)
+					}
+				}
+			],
+			tableList: [],
+			pagination: {
+				size: 'small',
+				showSizeChanger: true,
+				showQuickJumper: true,
+				total: 0,
+				pageSize: 10, 
+				current: 1,
+				showTotal: total => `共 ${total} 条`,
+				onChange: this.onPaginationChange,
+				onShowSizeChange: this.onPaginationChange
+			},
 		}
     }
-
-	componentDidMount(){
-		
+	
+	componentWillMount(){
+		let workbenchAuths = JSON.parse(Base64.decode(sessionStorage.getItem('workbenchAuths')))
+		this.setState({
+			myAuth: workbenchAuths
+		})
 	}
 	
-	hideModal = () => {
+	componentDidMount(){
+		this.takeTableCount()
+		this.takeTableList(this.state.currentnavmenu)
+	}
+	
+	onPaginationChange = (current, pageSize)=> {
+		let pagination = this.state.pagination
+		pagination.current = current
+		pagination.pageSize = pageSize
+		this.setState({
+			pagination: pagination
+		})
+		this.takeTableList(this.state.currentnavmenu)
+	}
+	
+	onCancel = () => {
 		this.setState({
 			visible: false
 		})
 	}
 	
-	trunDownEvent = ()=> {
+	onCancelRemit = () => {
 		this.setState({
-			title: '驳回',
-			dialog: 'turndown',
+			visible1: false
+		})
+	}
+	
+	onConfirm = remark => {
+		const that = this
+		this.onAuditApi({
+			remark: remark,
+			status: 2,
+			type: 3,
+			sourceId: this.state.tableItem.id
+		}, () => {
+			that.setState({
+				visible: false
+			})
+		})
+	}
+	
+	onConfirmRemit = p => {
+		const that = this
+		let params = {
+			...p,
+			type: 3,
+			status: 1,
+			sourceId: this.state.tableItem.id,
+			
+		}
+		console.log(params)
+		this.onAuditApi(params, ()=> {
+			that.setState({
+				visible1: false
+			})
+		})
+	}
+	
+	onReject = record => {
+		this.setState({
+			tableItem: record,
 			visible: true
 		})
 	}
 	
-	routeAuditContent = ()=> {
-		this.props.history.push({pathname: '/index/workbench/auditcontent'})
+	routeAuditContent = (id, productId) => {
+		this.props.history.push({pathname: '/index/workbench/auditcontent', state: {id: id, productId: productId}})
 	}
 	
-	switchNavMenu = (id)=> {
-		this.setState({
-			currentnavmenu: id
+	auditPass = record => {
+		const that = this
+		Modal.confirm({
+			centered: true,
+			width: 360,
+			title: '提示!',
+			content: '请确认是否执行授权操作?',
+			onOk() {
+				that.onAuditApi({
+					status: 1,
+					type: 1,
+					sourceId: record.saleOrderId
+				})
+			},
+			onCancel() {
+			  
+			},
+		});
+	}
+	
+	onAuditApi = (p, cb=null) => {
+		const that = this
+		onAuditForm(p).then(res=> {
+			if(res.code===1){
+				if(cb&&typeof cb === 'function') cb()
+				
+				message.success('成功！')
+				that.takeTableCount()
+				that.takeTableList(that.state.currentnavmenu)
+			}
 		})
 	}
 	
-	remitEvent = ()=> {
-		this.setState({
-			title: '提现转账录入',
-			dialog: 'remit',
-			visible: true
+	takeTableCount = () => {
+		let { itemnavmenu } = this.state
+		getTableListCount().then(res=> {
+			if(res.code===1){
+				itemnavmenu[0].num = res.data.reviewListCount 
+				itemnavmenu[1].num = res.data.withdrawCount
+				itemnavmenu[2].num = res.data.reviewListLogCount
+				itemnavmenu[3].num = res.data.withdrawLogCount
+				this.setState({
+					itemnavmenu
+				})
+			}
 		})
+	}
+	
+	switchNavMenu = (id) => {
+		let { pagination, currentnavmenu } = this.state
+		currentnavmenu = id
+		pagination.current = 1
+		pagination.pageSize = 10
+		
+		this.setState({
+			pagination,
+			currentnavmenu
+		})
+		this.takeTableList(id)
+	}
+	
+	remitEvent = record => {
+		this.setState({
+			visible1: true,
+			tableItem: record
+		})
+	}
+	
+	takeTableList = dataType => {
+		let { pagination, tableList } = this.state
+		this.setState({
+			loading: true
+		})
+		if(parseInt(dataType)===3){
+			getWithdrawList({
+				pageNum: pagination.current,
+				pageSize: pagination.pageSize
+			}).then(res=> {
+				if(res.code===1){
+					tableList = res.data.list.map((item, index)=> {
+						item['key'] = item.id
+						item['bankTypeText'] = item.bankType===1?'企业对公':'企业对私'
+						return item
+					})
+					pagination.total = res.data.total
+					this.setState({
+						tableList,
+						pagination,
+						loading: false,
+					})
+				}else{
+					this.setState({
+						loading: false,
+					})
+				}
+			}).catch(err=> {
+				this.setState({
+					loading: false,
+				})
+			})
+		}else if(parseInt(dataType)===4){
+			getWithdrawListLog({
+				pageNum: pagination.current,
+				pageSize: pagination.pageSize
+			}).then(res=> {
+				if(res.code===1){
+					tableList = res.data.list.map((item, index)=> {
+						item['key'] = item.id
+						item['bankTypeText'] = item.bankType===1?'企业对公':'企业对私'
+						item["createTime"] = item.createTime.replace(/T/g, " ").replace(/\.000\+0000/g, "")
+						
+						return item
+					})
+					pagination.total = res.data.total
+					this.setState({
+						tableList,
+						pagination,
+						loading: false,
+					})
+				}else{
+					this.setState({
+						loading: false,
+					})
+				}
+			}).catch(err=> {
+				this.setState({
+					loading: false,
+				})
+			})
+		} else {
+			getAuthList({
+				authAudit: parseInt(dataType),
+				pageNum: pagination.current,
+				pageSize: pagination.pageSize
+			}).then(res=> {
+				if(res.code===1){
+					tableList = res.data.list.map((item, index)=> {
+						item['key'] = item.saleOrderId
+						item['tradTypeText'] = item.tradType===1?'收入':'支出'
+						if(item.createTime){
+							item["createTime"] = item.createTime.replace(/T/g, " ").replace(/\.000\+0000/g, "")
+						}
+						if(item.reviewTime){
+							item["reviewTime"] = item.reviewTime.replace(/T/g, " ").replace(/\.000\+0000/g, "")
+						}
+						return item
+					})
+					pagination.total = res.data.total
+					this.setState({
+						tableList,
+						pagination,
+						loading: false,
+					})
+				}else{
+					this.setState({
+						loading: false,
+					})
+				}
+			}).catch(err=> {
+				this.setState({
+					loading: false,
+				})
+			})
+		}
 	}
 
     render(){
+		const { currentnavmenu } = this.state
         return(
             <div className="container_wrap">
 				<BreadCrumb breadcrumbs={this.state.breadcrumbList}></BreadCrumb>
-				<div className="srcoll_box">
-					<div className="srcoll_box_inner">
-						<ItemNavMenu 
-							switchNavMenu={this.switchNavMenu}
-							currentnavmenu={this.state.currentnavmenu}
-							itemnavmenu={this.state.itemnavmenu}></ItemNavMenu>
-						<TableComponent
-							columns={this.state.columns}
-							data={data} 
-							pagination={pagination}></TableComponent>
-					</div>
-				</div>
-				<GlobalModal
-					dialog={this.state.dialog}
-					title={this.state.title}
+				{
+					this.state.loading&&(
+						<div className="srcoll_box loading_box">
+							<Spin spinning={true}></Spin>
+						</div>
+					)
+				}
+				{
+					!this.state.loading&&(
+						<div className="srcoll_box">
+							<div className="srcoll_box_inner">
+								<ItemNavMenu 
+									switchNavMenu={this.switchNavMenu}
+									currentnavmenu={currentnavmenu}
+									itemnavmenu={this.state.itemnavmenu}></ItemNavMenu>
+								{
+									parseInt(currentnavmenu)===3&&(
+										<TableComponent
+											columns={this.state.columns}
+											data={this.state.tableList} 
+											pagination={this.state.pagination}></TableComponent>
+									)
+								}
+								{
+									parseInt(currentnavmenu)===4&&(
+										<TableComponent
+											columns={this.state.columns_w}
+											data={this.state.tableList} 
+											pagination={this.state.pagination}></TableComponent>
+									)
+								}
+								{
+									parseInt(currentnavmenu)===1&&(
+										<TableComponent
+											columns={this.state.columns_a}
+											data={this.state.tableList} 
+											pagination={this.state.pagination}></TableComponent>
+									)
+								}
+								{
+									parseInt(currentnavmenu)===2&&(
+										<TableComponent
+											columns={this.state.columns_l}
+											data={this.state.tableList} 
+											pagination={this.state.pagination}></TableComponent>
+									)
+								}
+							</div>
+						</div>
+					)
+				}
+				
+				<ModalReject
 					visible={this.state.visible}
-					hideModal={this.hideModal}></GlobalModal>
+					onCancel={this.onCancel}
+					onConfirm={this.onConfirm}></ModalReject>
+				<ModalRemit
+					visible={this.state.visible1}
+					onCancel={this.onCancelRemit}
+					onConfirm={this.onConfirmRemit}
+					remitInfo={this.state.tableItem}></ModalRemit>
             </div>  
         )
     }

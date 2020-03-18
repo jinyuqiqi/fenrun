@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {  NavLink } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
+ import { Base64 } from 'js-base64';
 import './index.css';
 const { Header } = Layout;
 const funcStyle = (icon)=> {
@@ -17,8 +18,37 @@ export default class TopNavigationBar extends Component{
 	    super(props);
 		this.state = {
 			logoText: '工程商管理',
+			setting: false,
+			userName: ''
 		}
+		
+		let userInfo = Base64.decode(sessionStorage.getItem('userInfo'))
+		userInfo =JSON.parse(userInfo) 
+		this.state.userName = userInfo.sysUserVo.accountName
 	}
+<<<<<<< HEAD
+=======
+	
+	showSetting = () => {
+		let setting  = !this.state.setting
+		this.setState({
+			setting
+		})
+	}
+	
+	logout = () => {
+		sessionStorage.clear()
+		this.props.history.replace({pathname: '/login'})
+	}
+	
+	resetPass = () => {
+		this.setState({
+			setting: false
+		})
+		this.props.history.replace({pathname: '/index/resetpassword'})
+		
+	}
+>>>>>>> 992f6c1e4e5032cedd463105ad61c99dd7894c76
 
     render(){
         return(
@@ -56,16 +86,18 @@ export default class TopNavigationBar extends Component{
             			})
             		}
                 </Menu>
-            	<div className="admin_icon">
+            	<div className="admin_icon" onClick={this.showSetting}>
             		<i className="iconfont icon-yonghu"></i>&nbsp;
-            		<span> admin</span>
+            		<span> {this.state.userName}</span>
             	</div>
-				{/*
-				<div className="tip_set">
-					<div className="pointer">修改密码</div>
-					<div className="pointer">退出登录</div>
-				</div>
-				*/}
+				{
+					this.state.setting&&(
+						<div className="tip_set">
+							<div onClick={this.resetPass} className="pointer">修改密码</div>
+							<div onClick={this.logout} className="pointer">退出登录</div>
+						</div>
+					)
+				}
             </Header>  
         )
     }

@@ -55,3 +55,10 @@ export const storageState = storageStates => {
   }
 }
 
+export const getAuditInfo = auditContent => {
+	return {
+	  type: 'GET_AUDITINFO',
+	  auditContent, 
+	}
+}
+

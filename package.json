@@ -2,6 +2,7 @@
   "name": "share-benefit",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@babel/core": "7.7.4",
     "@svgr/webpack": "4.3.3",
@@ -41,6 +42,7 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
     "jquery": "^3.4.1",
+    "js-base64": "^2.5.2",
     "mini-css-extract-plugin": "0.8.0",
     "moment": "^2.24.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",

@@ -13,7 +13,6 @@ const space_text = '角色名称不能包含空格';
 export default class AddingRole extends Component{
 	constructor(props){
         super(props);
-		console.log(props)
 		const roleId = props.location.state ? props.location.state.id : null
 		this.state = {
 			roleId,
@@ -38,7 +37,6 @@ export default class AddingRole extends Component{
     }
 
 	componentDidMount(){
-		console.log('mount')
 	}
 	
 	selectAllMenus(id=null){

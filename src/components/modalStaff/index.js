@@ -205,7 +205,7 @@ export default class ModalStaff extends Component{
     render(){
         return(
             <Modal
-			  style={{ transform: 'translateY(-50%)', top: '50%'}}
+			  centered
 			  title={this.props.affairId?'添加人员':'重置密码'}
 			  visible={this.props.visible}
 			  onCancel={this.hideModal}
